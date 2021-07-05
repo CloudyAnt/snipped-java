@@ -4,6 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
 
+/**
+ * Redefine the symbol of some numbers. <p>
+ * If an IntegerRedefiner object redefine '1' as 0, then 1 + 1 = 1 is correct in this object
+ */
 public abstract class IntegerRedefiner {
 
     private final char[] chars;
