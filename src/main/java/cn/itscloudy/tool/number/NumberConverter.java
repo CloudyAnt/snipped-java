@@ -1,9 +1,9 @@
-package cn.itscloudy.tool.number.converter;
+package cn.itscloudy.tool.number;
 
 /**
  * Convert a number with radix A to the equivalent number with radix B
  */
-public abstract class NumberConverter {
+public class NumberConverter {
     private NumberConverter() {
     }
 
