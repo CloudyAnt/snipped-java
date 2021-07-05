@@ -1,4 +1,5 @@
 /*
 !.gitignore
-!pom.xml
+!build.gradle
+!README.md
 !src
