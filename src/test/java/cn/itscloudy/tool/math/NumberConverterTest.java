@@ -1,4 +1,4 @@
-package cn.itscloudy.tool.number;
+package cn.itscloudy.tool.math;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;

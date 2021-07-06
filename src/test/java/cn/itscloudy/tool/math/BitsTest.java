@@ -1,9 +1,11 @@
-package cn.itscloudy.tool.number;
+package cn.itscloudy.tool.math;
 
 import cn.itscloudy.util.CsvIntArrConverter;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,7 +19,7 @@ public class BitsTest {
     })
     public void shouldInitBySize(int size) {
         Bits bits = Bits.ofSize(size);
-        assertEquals(size, bits.length());
+        assertEquals(size, bits.size());
 
         for (int i = size; i > 0; i--) {
             assertFalse(bits.testBit(i));
@@ -29,7 +31,7 @@ public class BitsTest {
             "0,",
             "1, 0",
             "1024, 10",
-            "1025, 10, 0",
+            "1025, 10|0",
     })
     public void shouldInitByDecimal(long decimal, @ConvertWith(CsvIntArrConverter.class) int[] indices) {
         Bits bits = Bits.ofDecimal(decimal);
@@ -45,8 +47,8 @@ public class BitsTest {
             "10110, 1|2|4",
             "111, 0|1|2"
     })
-    public void shouldInitByBitString(String s, @ConvertWith(CsvIntArrConverter.class) int[] indices) {
-        Bits bits = Bits.ofBitString(s);
+    public void shouldInitByBitString(String bitString, @ConvertWith(CsvIntArrConverter.class) int[] indices) {
+        Bits bits = Bits.ofBitString(bitString);
         for (int index : indices) {
             assertTrue(bits.testBit(index));
         }
@@ -56,14 +58,47 @@ public class BitsTest {
     @CsvSource({
             "0,",
             "1, 0",
-            "A, 1, 3",
+            "A, 1|3",
             "10, 4",
-            "1F, 0, 1, 2, 3, 4"
+            "1F, 0|1|2|3|4"
     })
-    public void shouldInitByHexString(String s, @ConvertWith(CsvIntArrConverter.class) int[] indices) {
-        Bits bits = Bits.ofHexString(s);
+    public void shouldInitByHexString(String hexString, @ConvertWith(CsvIntArrConverter.class) int[] indices) {
+        Bits bits = Bits.ofHexString(hexString);
         for (int index : indices) {
             assertTrue(bits.testBit(index));
+        }
+    }
+
+    @ParameterizedTest(name = "To 0 based indices of {0}")
+    @CsvSource({
+            "0,",
+            "1, 0",
+            "1010, 1|3",
+            "11010, 1|3|4",
+    })
+    public void shouldTo0BasedIndices(String bitString, @ConvertWith(CsvIntArrConverter.class) int[] expectations) {
+        Bits bits = Bits.ofBitString(bitString);
+        List<Integer> indices = bits.to0BasedIndices();
+        assertEquals(expectations.length, indices.size());
+        for (int i = 0; i < expectations.length; i++) {
+            assertEquals(expectations[i], indices.get(i));
+        }
+    }
+
+
+    @ParameterizedTest(name = "To 1 based indices of {0}")
+    @CsvSource({
+            "0,",
+            "1, 1",
+            "1010, 2|4",
+            "11010, 2|4|5",
+    })
+    public void shouldTo1BasedIndices(String bitString, @ConvertWith(CsvIntArrConverter.class) int[] expectations) {
+        Bits bits = Bits.ofBitString(bitString);
+        List<Integer> indices = bits.to1basedIndices();
+        assertEquals(expectations.length, indices.size());
+        for (int i = 0; i < expectations.length; i++) {
+            assertEquals(expectations[i], indices.get(i));
         }
     }
 
@@ -75,7 +110,7 @@ public class BitsTest {
     })
     public void shouldToBitString(String bitString, String expectation) {
         Bits bits = Bits.ofBitString(bitString);
-        assertEquals(expectation, bits.toString());
+        assertEquals(expectation, bits.toBitString());
     }
 
     @ParameterizedTest(name = "To reversed bit string of bit string {0}")
@@ -86,7 +121,7 @@ public class BitsTest {
     })
     public void shouldToRecBitString(String bitString, String expectation) {
         Bits bits = Bits.ofBitString(bitString);
-        assertEquals(expectation, bits.toRevString());
+        assertEquals(expectation, bits.toRevBitString());
     }
 
     @ParameterizedTest(name = "To hex string of bit string {0}")
@@ -112,7 +147,7 @@ public class BitsTest {
         Bits bitsA = Bits.ofBitString(a);
         Bits bitsB = Bits.ofBitString(b);
         bitsA.include(bitsB);
-        assertEquals(expectation, bitsA.toString());
+        assertEquals(expectation, bitsA.toBitString());
     }
 
     @ParameterizedTest(name = "Let {0} exclude {1}")
@@ -126,7 +161,7 @@ public class BitsTest {
         Bits bitsA = Bits.ofBitString(a);
         Bits bitsB = Bits.ofBitString(b);
         bitsA.exclude(bitsB);
-        assertEquals(expectation, bitsA.toString());
+        assertEquals(expectation, bitsA.toBitString());
     }
 
     @ParameterizedTest(name = "Get subtraction of {0} and {1}")
@@ -140,7 +175,7 @@ public class BitsTest {
         Bits bitsA = Bits.ofBitString(a);
         Bits bitsB = Bits.ofBitString(b);
         Bits subtraction = bitsA.subtract(bitsB);
-        assertEquals(expectation, subtraction.toString());
+        assertEquals(expectation, subtraction.toBitString());
     }
 
     @ParameterizedTest(name = "To complement of {0}")
@@ -153,7 +188,7 @@ public class BitsTest {
     public void shouldInvert(String origin, String complement) {
         Bits bits = Bits.ofBitString(origin);
         bits.invert();
-        assertEquals(complement, bits.toString());
+        assertEquals(complement, bits.toBitString());
     }
 
     @ParameterizedTest(name = "Get copy of {0}")
@@ -166,6 +201,6 @@ public class BitsTest {
     public void shouldGetCopy(String origin, String copy) {
         Bits bits = Bits.ofBitString(origin);
         Bits copedBits = bits.copy();
-        assertEquals(copy, copedBits.toString());
+        assertEquals(copy, copedBits.toBitString());
     }
 }

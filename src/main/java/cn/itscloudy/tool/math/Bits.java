@@ -1,4 +1,4 @@
-package cn.itscloudy.tool.number;
+package cn.itscloudy.tool.math;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,9 +19,6 @@ public class Bits {
         this.bits = bits;
     }
 
-    /**
-     * Init a object from a decimal
-     */
     public static Bits ofDecimal(long decimal) {
         int i = 0;
 
@@ -37,19 +34,10 @@ public class Bits {
         return ofIndices(indices, true);
     }
 
-    /**
-     * Init a object with a bit array has length {@code size} (all bits are false)
-     */
     public static Bits ofSize(int size) {
         return new Bits(new boolean[size]);
     }
 
-    /**
-     * Init a object and set specified index as true
-     *
-     * @param indices  the indices list
-     * @param basedOn0 if the indices based on 0. if false, 1 should be he first index
-     */
     public static Bits ofIndices(Collection<Integer> indices, boolean basedOn0) {
         Integer size = 0;
         for (Integer index : indices) {
@@ -67,9 +55,6 @@ public class Bits {
 
     private static final int[] bitValues = new int[]{1, 2, 4, 8};
 
-    /**
-     * Init a object from a reverse hex string. 10 = 16(10)
-     */
     public static Bits ofHexString(String hexStr) {
         int len = hexStr.length();
         boolean[] bits = new boolean[len * 4];
@@ -92,9 +77,6 @@ public class Bits {
         return new Bits(bits);
     }
 
-    /**
-     * Init a object from a bit string. 10 = 2(10)
-     */
     public static Bits ofBitString(String bitString) {
         int len = bitString.length();
         boolean[] bits = new boolean[len];
@@ -113,9 +95,6 @@ public class Bits {
         return new Bits(bits);
     }
 
-    /**
-     * Set {@code index} as true. 0 is the first index
-     */
     public void setBit(int index) {
         if (index >= bits.length) {
             bits = Arrays.copyOf(bits, index + 1);
@@ -123,9 +102,6 @@ public class Bits {
         bits[index] = true;
     }
 
-    /**
-     * Set {@code index} as false. 0 is the first index
-     */
     public void clearBit(int index) {
         if (index >= bits.length) {
             return;
@@ -133,17 +109,11 @@ public class Bits {
         bits[index] = false;
     }
 
-    /**
-     * Check if {@code index} is false. 0 is the first index
-     */
     public boolean testBit(int index) {
         return index < bits.length && bits[index];
     }
 
-    /**
-     * The length of bits
-     */
-    public int length() {
+    public int size() {
         return bits.length;
     }
 
@@ -151,8 +121,8 @@ public class Bits {
      * Equivalent to (a | b)
      */
     public void include(Bits bBits) {
-        if (bBits.length() > bits.length) {
-            bits = Arrays.copyOf(bits, bBits.length());
+        if (bBits.size() > bits.length) {
+            bits = Arrays.copyOf(bits, bBits.size());
         }
 
         for (int i = 0; i < bits.length; i++) {
@@ -205,11 +175,7 @@ public class Bits {
         return newBits;
     }
 
-    /**
-     * To reversed bit string
-     */
-    @Override
-    public String toString() {
+    public String toBitString() {
         StringBuilder sb = new StringBuilder();
         for (int i = bits.length - 1; i >= 0; i--) {
             sb.append(bits[i] ? 1 : 0);
@@ -217,10 +183,7 @@ public class Bits {
         return sb.toString();
     }
 
-    /**
-     * To reversed bit string
-     */
-    public String toRevString() {
+    public String toRevBitString() {
         StringBuilder sb = new StringBuilder();
         for (boolean bit : bits) {
             sb.append(bit ? 1 : 0);
@@ -228,10 +191,7 @@ public class Bits {
         return sb.toString();
     }
 
-    /**
-     * To a list that 0 is the first index
-     */
-    public List<Integer> toIndices() {
+    public List<Integer> to0BasedIndices() {
         List<Integer> indices = new ArrayList<>(bits.length);
         for (int i = 0; i < bits.length; i++) {
             if (bits[i]) {
@@ -241,9 +201,6 @@ public class Bits {
         return indices;
     }
 
-    /**
-     * To a list that 1 is the first index
-     */
     public List<Integer> to1basedIndices() {
         List<Integer> indices = new ArrayList<>(bits.length);
         for (int i = 0; i < bits.length; i++) {

@@ -1,4 +1,4 @@
-package cn.itscloudy.tool.number;
+package cn.itscloudy.tool.math;
 
 /**
  * Convert a number with radix A to the equivalent number with radix B

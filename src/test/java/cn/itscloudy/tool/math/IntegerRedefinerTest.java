@@ -1,4 +1,4 @@
-package cn.itscloudy.tool.number;
+package cn.itscloudy.tool.math;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;

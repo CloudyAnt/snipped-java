@@ -1,4 +1,4 @@
-package cn.itscloudy.tool.number;
+package cn.itscloudy.tool.math;
 
 import java.util.HashMap;
 import java.util.Map;
