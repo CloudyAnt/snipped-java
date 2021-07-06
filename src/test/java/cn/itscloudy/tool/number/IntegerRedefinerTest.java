@@ -10,9 +10,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class IntegerRedefinerTest extends IntegerRedefiner {
 
-    @Override
-    protected char[] chars() {
-        return new char[]{'@', '#', '$'};
+    public IntegerRedefinerTest() {
+        super('@', '#', '$');
     }
 
     @ParameterizedTest(name = "{0} add {1}")

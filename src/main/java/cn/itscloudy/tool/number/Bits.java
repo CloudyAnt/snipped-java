@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class Bits {
 
-    boolean[] bits;
+    private boolean[] bits;
 
     private Bits() {
     }
@@ -71,10 +71,11 @@ public class Bits {
      * Init a object from a reverse hex string. 10 = 16(10)
      */
     public static Bits ofHexString(String hexStr) {
-        boolean[] bits = new boolean[hexStr.length() * 4];
+        int len = hexStr.length();
+        boolean[] bits = new boolean[len * 4];
 
         int index = 0;
-        for (int i = hexStr.length() - 1; i >= 0; i--) {
+        for (int i = len - 1; i >= 0; i--) {
             char c = hexStr.charAt(i);
             int decimal;
             if (c >= '0' && c <= '9') {
@@ -82,7 +83,7 @@ public class Bits {
             } else if (c >= 'A' && c <= 'F') {
                 decimal = c - 'A' + 10;
             } else {
-                throw new NumberFormatException(hexStr + ": hexString -×-> bits, invalid char: " + c);
+                throw new NumberFormatException(hexStr + " -×-> bits, invalid char: " + c);
             }
             for (int bi = 0; bi < 4; bi++) {
                 bits[index++] = (decimal & bitValues[bi]) == bitValues[bi];
@@ -94,19 +95,19 @@ public class Bits {
     /**
      * Init a object from a bit string. 10 = 2(10)
      */
-    public static Bits ofBitString(String revBitStr) {
-        int len = revBitStr.length();
+    public static Bits ofBitString(String bitString) {
+        int len = bitString.length();
         boolean[] bits = new boolean[len];
 
         int maxI = len - 1;
         for (int i = maxI; i >= 0; i--) {
-            char c = revBitStr.charAt(i);
+            char c = bitString.charAt(i);
             if ('1' == c) {
                 bits[maxI - i] = true;
             } else if ('0' == c) {
                 bits[maxI - i] = false;
             } else {
-                throw new NumberFormatException(revBitStr + ": revString -×-> bits, invalid char: " + c);
+                throw new NumberFormatException(bitString + " -×-> bits, invalid char: " + c);
             }
         }
         return new Bits(bits);
@@ -175,7 +176,7 @@ public class Bits {
     /**
      * Equivalent to (~a)
      */
-    public void reverse() {
+    public void invert() {
         for (int i = 0; i < bits.length; i++) {
             bits[i] = !bits[i];
         }
@@ -205,13 +206,13 @@ public class Bits {
     }
 
     /**
-     * To bit string
+     * To reversed bit string
      */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (boolean bit : bits) {
-            sb.append(bit ? 1 : 0);
+        for (int i = bits.length - 1; i >= 0; i--) {
+            sb.append(bits[i] ? 1 : 0);
         }
         return sb.toString();
     }
@@ -221,8 +222,8 @@ public class Bits {
      */
     public String toRevString() {
         StringBuilder sb = new StringBuilder();
-        for (int i = bits.length - 1; i >= 0; i--) {
-            sb.append(bits[i] ? 1 : 0);
+        for (boolean bit : bits) {
+            sb.append(bit ? 1 : 0);
         }
         return sb.toString();
     }
@@ -271,7 +272,7 @@ public class Bits {
         int decimal = 0;
         for (boolean bit : bits) {
             if (bi == 4) {
-                sb.append(hexCharOf(decimal));
+                sb.insert(0, hexCharOf(decimal));
                 decimal = 0;
                 bi = 0;
             }
@@ -280,7 +281,7 @@ public class Bits {
             }
             bi++;
         }
-        sb.append(hexCharOf(decimal));
+        sb.insert(0, hexCharOf(decimal));
         return sb.toString();
     }
 

@@ -15,16 +15,17 @@ public abstract class IntegerRedefiner {
     private final Map<Character, Integer> charIntMap;
     private final int radix;
 
-    public IntegerRedefiner() {
-        this.chars = chars();
-        this.radix = chars.length;
+    public IntegerRedefiner(char... chars) {
+        this(chars, '-');
+    }
+
+    public IntegerRedefiner(char[] chars, char negative) {
+        this.charIntMap = new HashMap<>();
         if (chars.length < Character.MIN_RADIX) {
-            throw new NumberFormatException("radix " + radix +
+            throw new NumberFormatException("radix " + chars.length +
                     " less than Character.MIN_RADIX");
         }
-        this.negative = negative();
 
-        this.charIntMap = new HashMap<>();
         for (int i = 0; i < chars.length; i++) {
             Integer existentI = charIntMap.get(chars[i]);
             if (existentI != null) {
@@ -32,12 +33,22 @@ public abstract class IntegerRedefiner {
             }
             charIntMap.put(chars[i], i);
         }
+
+        this.chars = chars;
+        this.radix = chars.length;
+        this.negative = negative;
     }
 
-    abstract char[] chars();
+    public char[] chars() {
+        return this.chars;
+    }
 
     public char negative() {
-        return '-';
+        return this.negative;
+    }
+
+    public int radix() {
+        return this.radix;
     }
 
     public String add(String a, String b) {
