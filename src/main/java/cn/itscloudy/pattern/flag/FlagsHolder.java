@@ -1,5 +1,8 @@
-package cn.itscloudy.tool.math.flag;
+package cn.itscloudy.pattern.flag;
 
+/**
+ * A FlagHolder must implement the {@link #getFlags()} and {@link #setFlags(int)} methods
+ */
 public abstract class FlagsHolder<F extends Flag> {
 
     abstract protected int getFlags();
@@ -21,5 +24,4 @@ public abstract class FlagsHolder<F extends Flag> {
     public boolean matchFlag(F f) {
         return f.match(getFlags());
     }
-
 }

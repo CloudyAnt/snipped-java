@@ -1,4 +1,6 @@
-package cn.itscloudy.tool.math.flag;
+package cn.itscloudy.pattern.flag.example1;
+
+import cn.itscloudy.pattern.flag.Flag;
 
 public enum ProductFlags implements Flag {
     RECOMMENDED,

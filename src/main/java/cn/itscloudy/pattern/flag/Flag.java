@@ -1,7 +1,7 @@
-package cn.itscloudy.tool.math.flag;
+package cn.itscloudy.pattern.flag;
 
 /**
- * Each Flag object referred to a bit, to represent true/false
+ * Each Flag object referred to a bit in the bitmap(using int)
  */
 public interface Flag {
 
@@ -32,7 +32,7 @@ public interface Flag {
         return (flagValue() & flags) == 0;
     }
 
-    static int combine(Flag... flags) {
+    static int collect(Flag... flags) {
         int flagsI = 0;
         for (Flag flag : flags) {
             flagsI = flag.addTo(flagsI);
@@ -40,7 +40,7 @@ public interface Flag {
         return flagsI;
     }
 
-    static Operator of(int flags) {
+    static Operator operate(int flags) {
         return new Operator(flags);
     }
 

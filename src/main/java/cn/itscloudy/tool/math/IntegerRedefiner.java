@@ -122,6 +122,6 @@ public abstract class IntegerRedefiner {
             sb.insert(0, s);
             i = i / radix;
         }
-        return positive ? sb.toString() : sb.insert(0, '-').toString();
+        return positive ? sb.toString() : sb.insert(0, negative).toString();
     }
 }

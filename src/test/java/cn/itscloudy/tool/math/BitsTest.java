@@ -136,6 +136,18 @@ public class BitsTest {
         assertEquals(expectation, bits.toHexString());
     }
 
+    @ParameterizedTest(name = "To decimal of bit string {0}")
+    @CsvSource({
+            "0, 0",
+            "1, 1",
+            "1010, 10",
+            "11010, 26",
+    })
+    public void shouldToDecimal(String bitString, int expectation) {
+        Bits bits = Bits.ofBitString(bitString);
+        assertEquals(expectation, bits.toDecimal());
+    }
+
     @ParameterizedTest(name = "Use {0} include {1}")
     @CsvSource({
             "0, 0, 0",
