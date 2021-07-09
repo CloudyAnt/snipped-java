@@ -1,11 +1,7 @@
 package cn.itscloudy.snippedjava.tool.collection;
 
 import java.util.*;
-import java.util.function.BiFunction;
-import java.util.function.BiPredicate;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
+import java.util.function.*;
 
 public class CollectorElite {
 
@@ -54,13 +50,12 @@ public class CollectorElite {
         return list;
     }
 
-    public static <A, B> ArrayList<B> mapList(Collection<A> collection, Function<A, B> bMapper, Predicate<A> skip) {
+    public static <A, B> ArrayList<B> mapList(Collection<A> collection, Function<A, B> bMapper, Predicate<A> predicate) {
         ArrayList<B> list = new ArrayList<>(collection.size());
         for (A a : collection) {
-            if (skip.test(a)) {
-                continue;
+            if (predicate.test(a)) {
+                list.add(bMapper.apply(a));
             }
-            list.add(bMapper.apply(a));
         }
 
         return list;
@@ -107,6 +102,10 @@ public class CollectorElite {
         return sub;
     }
 
+    /**
+     * Different from {@link List#subList(int, int)}, this method will check the params and limitations,
+     * and will return empty list instead of throwing exception
+     */
     public static <A> List<A> subList(List<A> list, int from, int amount) {
         if (list.isEmpty()) {
             return Collections.emptyList();
@@ -118,10 +117,26 @@ public class CollectorElite {
     }
 
     public static <A> List<A> intersect(Collection<A> collection, Collection<A> otherCollection) {
-        return collection.stream()
-                .distinct()
-                .filter(otherCollection::contains)
-                .collect(Collectors.toList());
+        HashSet<A> distinctCollection = new HashSet<>(collection);
+        ArrayList<A> intersection = new ArrayList<>();
+        for (A a : distinctCollection) {
+            if (otherCollection.contains(a)) {
+                intersection.add(a);
+            }
+        }
+        return intersection;
+    }
+
+    public static <A> List<A> intersect(Collection<A> collection, Collection<A> otherCollection,
+                                        BiPredicate<A, A> comparator) {
+        List<A> distinctCollection = distinctByComparator(collection, comparator);
+        ArrayList<A> intersection = new ArrayList<>();
+        iterateAndMatchOver2(distinctCollection, otherCollection, comparator, (match, a) -> {
+            if (match) {
+                intersection.add(a);
+            }
+        });
+        return intersection;
     }
 
     public static <A> List<A> subtract(Collection<A> collection, Collection<A> otherCollection) {
@@ -165,13 +180,11 @@ public class CollectorElite {
         return matchedItems;
     }
 
-    public static <A, F> int countDistinct(Collection<A> collection, Function<A, F> fMapper, Predicate<F> fPredicate) {
+    public static <A, F> int count(Collection<A> collection, Function<A, F> fMapper) {
         Set<F> fs = new HashSet<>();
         for (A a : collection) {
             F f = fMapper.apply(a);
-            if (fPredicate.test(f)) {
-                fs.add(f);
-            }
+            fs.add(f);
         }
         return fs.size();
     }
@@ -218,15 +231,32 @@ public class CollectorElite {
         return sb.toString();
     }
 
-    public static <A, F> List<A> distinct(Collection<A> as, Function<A, F> fieldGetter) {
-        Set<F> fs = new HashSet<>();
-        ArrayList<A> distinctAs = new ArrayList<>();
-        for (A a : as) {
-            if (fs.add(fieldGetter.apply(a))) {
-                distinctAs.add(a);
+    public static <A> List<A> distinctByComparator(Collection<A> collection, BiPredicate<A, A> comparator) {
+        ArrayList<A> distinctCollection = new ArrayList<>();
+        iterateAndMatchOver2(collection, distinctCollection, comparator, (match, a) -> {
+            if (!match) {
+                distinctCollection.add(a);
             }
+        });
+        return distinctCollection;
+    }
+
+    /**
+     * iterate over 2 collections and find the matched items
+     */
+    private static <A> void iterateAndMatchOver2(Collection<A> base, Collection<A> provider,
+                                                 BiPredicate<A, A> comparator,
+                                                 BiConsumer<Boolean, A> matchingConsumer) {
+        for (A a : base) {
+            boolean match = false;
+            for (A a1 : provider) {
+                if (comparator.test(a, a1)) {
+                    match = true;
+                    break;
+                }
+            }
+            matchingConsumer.accept(match, a);
         }
-        return distinctAs;
     }
 
     public static <A> Optional<A> findAny(Collection<A> as, Predicate<A> predicate) {
@@ -238,23 +268,32 @@ public class CollectorElite {
         return Optional.empty();
     }
 
-    public static <A, F extends Comparable<F>> F maxField(Collection<A> as, Function<A, F> fieldGetter) {
-        F max = null;
+    public static <A, F extends Comparable<F>> F findMaxField(Collection<A> as, Function<A, F> fieldGetter) {
+        return findUltra(as, fieldGetter, i -> i > 0);
+    }
+
+    public static <A, F extends Comparable<F>> F findMinField(Collection<A> as, Function<A, F> fieldGetter) {
+        return findUltra(as, fieldGetter, i -> i < 0);
+    }
+
+    public static <A, F extends Comparable<F>> F findUltra(Collection<A> as, Function<A, F> fieldGetter,
+                                                           IntPredicate predicate) {
+        F ultra = null;
         for (A a : as) {
             F f = fieldGetter.apply(a);
-            if (max == null) {
-                max = f;
+            if (ultra == null) {
+                ultra = f;
                 continue;
             }
             if (f == null) {
                 continue;
             }
-            int i = f.compareTo(max);
-            if (i > 0) {
-                max = f;
+            int i = f.compareTo(ultra);
+            if (predicate.test(i)) {
+                ultra = f;
             }
         }
-        return max;
+        return ultra;
     }
 
 }
