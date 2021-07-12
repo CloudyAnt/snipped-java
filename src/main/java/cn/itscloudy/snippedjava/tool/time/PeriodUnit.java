@@ -7,7 +7,7 @@ import java.util.TimeZone;
 import java.util.function.Consumer;
 
 /**
- * Every unit specify a range of period. The period start at one day's
+ * Every unit specify a range of period. The period starts and ends at one day's start
  */
 public enum PeriodUnit {
     MONTH(
@@ -63,7 +63,7 @@ public enum PeriodUnit {
     }
 
     /**
-     * The interval is [startDate, endDate)
+     * The interval is [startInstant, endInstant)
      */
     public static class Period {
         private final PeriodUnit periodUnit;
@@ -87,10 +87,16 @@ public enum PeriodUnit {
             return periodUnit;
         }
 
+        /**
+         * included
+         */
         public Instant getStartInstant() {
             return startInstant;
         }
 
+        /**
+         * not included
+         */
         public Instant getEndInstant() {
             return endInstant;
         }

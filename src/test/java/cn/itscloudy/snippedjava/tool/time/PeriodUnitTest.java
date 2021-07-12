@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PeriodUnitTest {
 
-    private static final ZoneOffset OFFSET = ZoneOffset.ofHours(8);
+    private static final ZoneOffset OFFSET = ZoneOffset.ofHours(10);
 
     @ParameterizedTest(name = "Get current period of unit: {0}")
     @EnumSource(PeriodUnit.class)
