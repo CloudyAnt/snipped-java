@@ -12,6 +12,7 @@ repositories {
 dependencies {
     implementation 'org.projectlombok:lombok:1.18.12'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.0-M1'
+    testImplementation 'org.mockito:mockito-junit-jupiter:3.11.2'
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
 }

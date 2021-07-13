@@ -7,6 +7,7 @@ My personal library of java snippets. You can check if it helps you too.
 The base package is **cn.itscloudy.snippedjava**
 
 base package:
+- algorithm [classical algorithm implements]
 - exception [hard explained exceptions]
 - pattern [ways to resolve problems]
     - flag [use one field to save multi status]
