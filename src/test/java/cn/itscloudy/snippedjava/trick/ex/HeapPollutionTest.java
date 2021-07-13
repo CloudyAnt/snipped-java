@@ -1,4 +1,4 @@
-package cn.itscloudy.snippedjava.exception;
+package cn.itscloudy.snippedjava.trick.ex;
 
 import org.junit.jupiter.api.Test;
 

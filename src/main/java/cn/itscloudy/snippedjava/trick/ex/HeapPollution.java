@@ -1,8 +1,8 @@
-package cn.itscloudy.snippedjava.exception;
+package cn.itscloudy.snippedjava.trick.ex;
 
 public class HeapPollution {
 
-    @SafeVarargs
+    @SafeVarargs // it does nothing, just remove the warning
     public final <Y> Y[] polluter(Y... ys) {
         return ys;
     }
