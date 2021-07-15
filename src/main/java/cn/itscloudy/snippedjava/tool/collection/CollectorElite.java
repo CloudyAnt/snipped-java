@@ -131,7 +131,7 @@ public class CollectorElite {
                                         BiPredicate<A, A> comparator) {
         List<A> distinctCollection = distinctByComparator(collection, comparator);
         ArrayList<A> intersection = new ArrayList<>();
-        iterateAndMatchOver2(distinctCollection, otherCollection, comparator, (match, a) -> {
+        iterateAndFindMatch(distinctCollection, otherCollection, comparator, (match, a) -> {
             if (match) {
                 intersection.add(a);
             }
@@ -233,7 +233,7 @@ public class CollectorElite {
 
     public static <A> List<A> distinctByComparator(Collection<A> collection, BiPredicate<A, A> comparator) {
         ArrayList<A> distinctCollection = new ArrayList<>();
-        iterateAndMatchOver2(collection, distinctCollection, comparator, (match, a) -> {
+        iterateAndFindMatch(collection, distinctCollection, comparator, (match, a) -> {
             if (!match) {
                 distinctCollection.add(a);
             }
@@ -242,20 +242,20 @@ public class CollectorElite {
     }
 
     /**
-     * iterate over 2 collections and find the matched items
+     * for each provider item, find the matched item in base
      */
-    private static <A> void iterateAndMatchOver2(Collection<A> base, Collection<A> provider,
-                                                 BiPredicate<A, A> comparator,
-                                                 BiConsumer<Boolean, A> matchingConsumer) {
-        for (A a : base) {
+    private static <A> void iterateAndFindMatch(Collection<A> provider, Collection<A> base,
+                                                BiPredicate<A, A> comparator,
+                                                BiConsumer<Boolean, A> resultConsumer) {
+        for (A a : provider) {
             boolean match = false;
-            for (A a1 : provider) {
+            for (A a1 : base) {
                 if (comparator.test(a, a1)) {
                     match = true;
                     break;
                 }
             }
-            matchingConsumer.accept(match, a);
+            resultConsumer.accept(match, a);
         }
     }
 

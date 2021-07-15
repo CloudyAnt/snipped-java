@@ -7,9 +7,16 @@ public class HeapPollution {
         return ys;
     }
 
-    public <X> X[] caller(X x) {
-        // the inner call of polluter() cannot recognize X, so it return Object[]
+    public <X> X[] polluterCaller(X x) {
+        // the polluter will return Object[] not X[], cause it cannot recognize X
         return polluter(x);
     }
 
+    public <B> B normal(B b) {
+        return b;
+    }
+
+    public <A> A normalCaller(A a) {
+        return normal(a);
+    }
 }
