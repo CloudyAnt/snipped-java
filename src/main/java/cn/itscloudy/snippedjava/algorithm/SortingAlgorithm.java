@@ -3,12 +3,12 @@ package cn.itscloudy.snippedjava.algorithm;
 import java.util.function.Function;
 
 public enum SortingAlgorithm {
-    SELECTION(SortingAlgorithm::selection, true),
-    BUBBLE(SortingAlgorithm::bubble, true),
-    INSERTION(SortingAlgorithm::insertion, true),
-    QS(SortingAlgorithm::qs, true), // quick sort
-    HEAP(SortingAlgorithm::heap),
-    SHELL(SortingAlgorithm::shell),
+    SELECTION(SortingAlgorithm::selection),
+    BUBBLE(SortingAlgorithm::bubble),
+    INSERTION(SortingAlgorithm::insertion),
+    QS(SortingAlgorithm::qs), // quick sort
+    HEAP(SortingAlgorithm::heap, false),
+    SHELL(SortingAlgorithm::shell, false),
     ;
 
     private final Function<int[], int[]> algorithm;
@@ -16,7 +16,7 @@ public enum SortingAlgorithm {
 
     SortingAlgorithm(Function<int[], int[]> algorithm) {
         this.algorithm = algorithm;
-        this.ready = false;
+        this.ready = true;
     }
 
     SortingAlgorithm(Function<int[], int[]> algorithm, boolean ready) {
