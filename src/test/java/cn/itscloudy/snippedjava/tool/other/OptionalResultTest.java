@@ -3,6 +3,7 @@ package cn.itscloudy.snippedjava.tool.other;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,6 +18,10 @@ public class OptionalResultTest {
         assertEquals(result, or.get());
         assertNull(or.exception());
         assertEquals(result, or.orElseThrow(e -> new RuntimeException("E")));
+
+        AtomicBoolean succeed = new AtomicBoolean(false);
+        or.ifSuccess(s -> succeed.set(true));
+        assertTrue(succeed.get());
 
         Optional<String> optional = or.optional();
         assertTrue(optional.isPresent());
@@ -37,6 +42,12 @@ public class OptionalResultTest {
         assertNull(or.get());
         assertEquals(ex, or.exception());
         assertThrows(RuntimeException.class, () -> or.orElseThrow(e -> new RuntimeException("E")));
+        assertEquals("Other value", or.orElse("Other value"));
+        assertEquals("Other value", or.orElseGet(() -> "Other value"));
+
+        AtomicBoolean succeed = new AtomicBoolean(false);
+        or.ifSuccess(s -> succeed.set(true));
+        assertFalse(succeed.get());
 
         Optional<String> optional = or.optional();
         assertTrue(optional.isEmpty());
