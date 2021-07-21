@@ -7,25 +7,19 @@ public enum SortingAlgorithm {
     BUBBLE(SortingAlgorithm::bubble),
     INSERTION(SortingAlgorithm::insertion),
     QS(SortingAlgorithm::qs), // quick sort
-    HEAP(SortingAlgorithm::heap, false),
-    SHELL(SortingAlgorithm::shell, false),
+    HEAP(SortingAlgorithm::heap),
+    SHELL(null),
+    RADIX(null),
     ;
 
     private final Function<int[], int[]> algorithm;
-    private final boolean ready; // weather it's read for test
 
     SortingAlgorithm(Function<int[], int[]> algorithm) {
         this.algorithm = algorithm;
-        this.ready = true;
-    }
-
-    SortingAlgorithm(Function<int[], int[]> algorithm, boolean ready) {
-        this.algorithm = algorithm;
-        this.ready = ready;
     }
 
     public boolean notReady() {
-        return !ready;
+        return algorithm == null;
     }
 
     public int[] sort(int[] arr) {
@@ -114,10 +108,34 @@ public enum SortingAlgorithm {
     }
 
     private static int[] heap(int[] arr) {
+        int mid = arr.length / 2 - 1;
+        for (int i = mid; i >= 0; i--) {
+            heapify(arr, i, arr.length);
+        }
+
+        for (int i = arr.length - 1; i > 0; i--) {
+            swap(arr, 0, i);
+            heapify(arr, 0, i);
+        }
         return arr;
     }
 
-    private static int[] shell(int[] arr) {
-        return arr;
+    private static void heapify(int[] arr, int i, int limit) {
+        int maxIndex = i;
+        int l = 2 * i + 1;
+        if (l < limit && arr[l] > arr[maxIndex]) {
+            maxIndex = l;
+        }
+
+        int r = 2 * i + 2;
+        if (r < limit && arr[r] > arr[maxIndex]) {
+            maxIndex = r;
+        }
+
+        if (maxIndex != i) {
+            swap(arr, i, maxIndex);
+            heapify(arr, maxIndex, limit);
+        }
     }
+
 }
