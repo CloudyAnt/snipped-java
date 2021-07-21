@@ -1,9 +1,6 @@
 package cn.itscloudy.snippedjava.tool.math;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * A Bits contains a boolean array which referring to a bit array. With the bit array you can operate binary easily
@@ -250,4 +247,33 @@ public class Bits {
         }
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(toBitString());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof Bits)) {
+            return false;
+        }
+
+        Bits other = (Bits) obj;
+        int maxSize = Math.max(size(), other.size());
+        for (int i = 0; i < maxSize; i++) {
+            if (testBit(i) != other.testBit(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Bits{bits=" + toBitString() + "}";
+    }
 }

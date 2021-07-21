@@ -21,8 +21,7 @@ public class OptionalResult<T> {
 
     public static <T> OptionalResult<T> of(Supplier<? extends T> supplier) {
         try {
-            T value = supplier.get();
-            return ofValue(value);
+            return ofValue(supplier.get());
         } catch (Exception e) {
             return ofException(e);
         }

@@ -52,4 +52,12 @@ public class OptionalResultTest {
         Optional<String> optional = or.optional();
         assertTrue(optional.isEmpty());
     }
+
+    @Test
+    public void shouldEquals() {
+        String sameResult = "Greetings from the Moon";
+        OptionalResult<String> or1 = OptionalResult.of(() -> sameResult);
+        OptionalResult<String> or2 = OptionalResult.of(() -> sameResult);
+        assertEquals(or2, or1);
+    }
 }

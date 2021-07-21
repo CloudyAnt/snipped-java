@@ -1,6 +1,7 @@
 package cn.itscloudy.snippedjava.tool.math;
 
 import cn.itscloudy.snippedjava.util.CsvIntArrConverter;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -214,5 +215,13 @@ public class BitsTest {
         Bits bits = Bits.ofBitString(origin);
         Bits copedBits = bits.copy();
         assertEquals(copy, copedBits.toBitString());
+    }
+
+    @Test
+    public void shouldEquals() {
+        String sameBits = "10110";
+        Bits bits1 = Bits.ofBitString(sameBits);
+        Bits bits2 = Bits.ofBitString(sameBits);
+        assertEquals(bits1, bits2);
     }
 }
