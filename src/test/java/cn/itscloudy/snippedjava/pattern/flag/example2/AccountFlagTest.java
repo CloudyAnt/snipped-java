@@ -19,6 +19,10 @@ public class AccountFlagTest {
         assertTrue(boss.match(account.getFlags()));
         assertTrue(manager.match(account.getFlags()));
         assertFalse(worker.match(account.getFlags()));
+
+        assertFalse(boss.antiMatch(account.getFlags()));
+        assertFalse(manager.antiMatch(account.getFlags()));
+        assertTrue(worker.antiMatch(account.getFlags()));
     }
 
     @Test
@@ -31,6 +35,10 @@ public class AccountFlagTest {
         assertFalse(boss.match(account.getFlags()));
         assertFalse(manager.match(account.getFlags()));
         assertTrue(worker.match(account.getFlags()));
+
+        assertTrue(boss.antiMatch(account.getFlags()));
+        assertTrue(manager.antiMatch(account.getFlags()));
+        assertFalse(worker.antiMatch(account.getFlags()));
     }
 
 }
