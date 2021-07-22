@@ -1,6 +1,7 @@
 package cn.itscloudy.snippedjava.trick.lang;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * Be able to be looped by "for" segment
@@ -28,6 +29,9 @@ public class ForLoopUsable<T> implements Iterable<T> {
 
         @Override
         public T next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
             return ts[cursor++];
         }
     }

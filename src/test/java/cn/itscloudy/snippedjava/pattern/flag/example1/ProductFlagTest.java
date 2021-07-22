@@ -4,10 +4,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ProductFlagTest {
+class ProductFlagTest {
 
     @Test
-    public void shouldAddFlagsToProduct() {
+    void shouldAddFlagsToProduct() {
         Product product = new Product();
         product.setFlags(ProductFlags.RECOMMENDED.flagValue());
         product.addFlag(ProductFlags.IMPORTED);
@@ -20,7 +20,7 @@ public class ProductFlagTest {
     }
 
     @Test
-    public void shouldRemoveFlagsFromProduct() {
+    void shouldRemoveFlagsFromProduct() {
         Product product = new Product();
         int flags = ProductFlags.RECOMMENDED.flagValue() + ProductFlags.IMPORTED.flagValue() +
                 ProductFlags.SOLD_OUT.flagValue();

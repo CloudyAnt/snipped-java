@@ -5,9 +5,9 @@ package cn.itscloudy.snippedjava.pattern.flag;
  */
 public abstract class FlagsHolder<F extends Flag> {
 
-    abstract protected int getFlags();
+    protected abstract int getFlags();
 
-    abstract protected void setFlags(int newFlags);
+    protected abstract void setFlags(int newFlags);
 
     public FlagsHolder<F> addFlag(F f) {
         int newFlags = f.addTo(getFlags());

@@ -7,10 +7,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class OptionalResultTest {
+class OptionalResultTest {
 
     @Test
-    public void shouldContainValue() {
+    void shouldContainValue() {
         String result = "MONKEY";
         OptionalResult<String> or = OptionalResult.of(() -> result);
 
@@ -29,7 +29,7 @@ public class OptionalResultTest {
     }
 
     @Test
-    public void shouldContainException() {
+    void shouldContainException() {
         RuntimeException ex = new RuntimeException("Runtime Exception");
         OptionalResult<String> or = OptionalResult.of(() -> {
             if (System.currentTimeMillis() > 0) {
@@ -54,7 +54,7 @@ public class OptionalResultTest {
     }
 
     @Test
-    public void shouldEquals() {
+    void shouldEquals() {
         String sameResult = "Greetings from the Moon";
         OptionalResult<String> or1 = OptionalResult.of(() -> sameResult);
         OptionalResult<String> or2 = OptionalResult.of(() -> sameResult);

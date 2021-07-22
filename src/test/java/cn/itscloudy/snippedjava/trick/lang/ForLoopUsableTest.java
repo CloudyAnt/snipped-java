@@ -4,10 +4,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ForLoopUsableTest {
+class ForLoopUsableTest {
 
     @Test
-    public void shouldUseForLoop() {
+    void shouldUseForLoop() {
         String[] array = {"ABC", "DEF", "GHI"};
         ForLoopUsable<String> loopUsable = new ForLoopUsable<>(array);
 

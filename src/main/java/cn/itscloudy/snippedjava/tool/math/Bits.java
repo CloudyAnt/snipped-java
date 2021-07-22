@@ -7,13 +7,13 @@ import java.util.*;
  */
 public class Bits {
 
-    private boolean[] bits;
+    private boolean[] values;
 
     private Bits() {
     }
 
-    public Bits(boolean[] bits) {
-        this.bits = bits;
+    public Bits(boolean[] values) {
+        this.values = values;
     }
 
     public static Bits ofDecimal(long decimal) {
@@ -93,36 +93,36 @@ public class Bits {
     }
 
     public void setBit(int index) {
-        if (index >= bits.length) {
-            bits = Arrays.copyOf(bits, index + 1);
+        if (index >= values.length) {
+            values = Arrays.copyOf(values, index + 1);
         }
-        bits[index] = true;
+        values[index] = true;
     }
 
     public void clearBit(int index) {
-        if (index >= bits.length) {
+        if (index >= values.length) {
             return;
         }
-        bits[index] = false;
+        values[index] = false;
     }
 
     public boolean testBit(int index) {
-        return index < bits.length && bits[index];
+        return index < values.length && values[index];
     }
 
     public int size() {
-        return bits.length;
+        return values.length;
     }
 
     /**
      * Equivalent to (a | b)
      */
     public void include(Bits bBits) {
-        if (bBits.size() > bits.length) {
-            bits = Arrays.copyOf(bits, bBits.size());
+        if (bBits.size() > values.length) {
+            values = Arrays.copyOf(values, bBits.size());
         }
 
-        for (int i = 0; i < bits.length; i++) {
+        for (int i = 0; i < values.length; i++) {
             if (bBits.testBit(i)) {
                 setBit(i);
             }
@@ -133,7 +133,7 @@ public class Bits {
      * Equivalent to (a & ~b)
      */
     public void exclude(Bits bBits) {
-        for (int i = 0; i < bits.length; i++) {
+        for (int i = 0; i < values.length; i++) {
             if (testBit(i) && bBits.testBit(i)) {
                 clearBit(i);
             }
@@ -144,8 +144,8 @@ public class Bits {
      * Equivalent to (~a)
      */
     public void invert() {
-        for (int i = 0; i < bits.length; i++) {
-            bits[i] = !bits[i];
+        for (int i = 0; i < values.length; i++) {
+            values[i] = !values[i];
         }
     }
 
@@ -163,9 +163,9 @@ public class Bits {
      */
     public Bits copy() {
         Bits newBits = new Bits();
-        newBits.bits = new boolean[bits.length];
-        for (int i = 0; i < bits.length; i++) {
-            if (bits[i]) {
+        newBits.values = new boolean[values.length];
+        for (int i = 0; i < values.length; i++) {
+            if (values[i]) {
                 newBits.setBit(i);
             }
         }
@@ -174,24 +174,24 @@ public class Bits {
 
     public String toBitString() {
         StringBuilder sb = new StringBuilder();
-        for (int i = bits.length - 1; i >= 0; i--) {
-            sb.append(bits[i] ? 1 : 0);
+        for (int i = values.length - 1; i >= 0; i--) {
+            sb.append(values[i] ? 1 : 0);
         }
         return sb.toString();
     }
 
     public String toRevBitString() {
         StringBuilder sb = new StringBuilder();
-        for (boolean bit : bits) {
+        for (boolean bit : values) {
             sb.append(bit ? 1 : 0);
         }
         return sb.toString();
     }
 
     public List<Integer> to0BasedIndices() {
-        List<Integer> indices = new ArrayList<>(bits.length);
-        for (int i = 0; i < bits.length; i++) {
-            if (bits[i]) {
+        List<Integer> indices = new ArrayList<>(values.length);
+        for (int i = 0; i < values.length; i++) {
+            if (values[i]) {
                 indices.add(i);
             }
         }
@@ -199,9 +199,9 @@ public class Bits {
     }
 
     public List<Integer> to1basedIndices() {
-        List<Integer> indices = new ArrayList<>(bits.length);
-        for (int i = 0; i < bits.length; i++) {
-            if (bits[i]) {
+        List<Integer> indices = new ArrayList<>(values.length);
+        for (int i = 0; i < values.length; i++) {
+            if (values[i]) {
                 indices.add(i + 1);
             }
         }
@@ -211,7 +211,7 @@ public class Bits {
     public long toDecimal() {
         long decimal = 0;
         long base = 1;
-        for (boolean bit : bits) {
+        for (boolean bit : values) {
             if (bit) {
                 decimal += base;
             }
@@ -224,7 +224,7 @@ public class Bits {
         StringBuilder sb = new StringBuilder();
         int bi = 0;
         int decimal = 0;
-        for (boolean bit : bits) {
+        for (boolean bit : values) {
             if (bi == 4) {
                 sb.insert(0, hexCharOf(decimal));
                 decimal = 0;

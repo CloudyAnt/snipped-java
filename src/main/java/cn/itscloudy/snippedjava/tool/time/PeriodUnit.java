@@ -102,10 +102,10 @@ public enum PeriodUnit {
         }
 
         public Period toPrevious() {
-            Calendar calendar = (Calendar) this.calendar.clone();
-            periodUnit.unitAgoSetter.accept(calendar);
-            periodUnit.unitAgoSetter.accept(calendar);
-            return new Period(calendar, periodUnit);
+            Calendar previousCalendar = (Calendar) this.calendar.clone();
+            periodUnit.unitAgoSetter.accept(previousCalendar);
+            periodUnit.unitAgoSetter.accept(previousCalendar);
+            return new Period(previousCalendar, periodUnit);
         }
 
         public Period toNext() {

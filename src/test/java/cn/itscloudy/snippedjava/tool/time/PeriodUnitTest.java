@@ -13,13 +13,13 @@ import java.util.TimeZone;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class PeriodUnitTest {
+class PeriodUnitTest {
 
     private static final ZoneOffset OFFSET = ZoneOffset.ofHours(10);
 
     @ParameterizedTest(name = "Get current period of unit: {0}")
     @EnumSource(PeriodUnit.class)
-    public void shouldGetCurrentPeriod(PeriodUnit unit) {
+    void shouldGetCurrentPeriod(PeriodUnit unit) {
         Calendar current = Calendar.getInstance(TimeZone.getTimeZone(OFFSET));
         PeriodUnit.Period currentPeriod = unit.current(OFFSET);
         Instant startInstant = currentPeriod.getStartInstant();
@@ -32,7 +32,7 @@ public class PeriodUnitTest {
     }
 
     @Test
-    public void shouldGetDayPeriods() {
+    void shouldGetDayPeriods() {
         // GIVEN
         Calendar currentCalendar = Calendar.getInstance(TimeZone.getTimeZone(OFFSET));
         zero(currentCalendar);
@@ -56,7 +56,7 @@ public class PeriodUnitTest {
     }
 
     @Test
-    public void shouldGetWeekPeriods() {
+    void shouldGetWeekPeriods() {
         // GIVEN
         Calendar currentCalendar = Calendar.getInstance(TimeZone.getTimeZone(OFFSET));
         currentCalendar.setFirstDayOfWeek(Calendar.MONDAY);
@@ -83,7 +83,7 @@ public class PeriodUnitTest {
     }
 
     @Test
-    public void shouldGetMonthPeriods() {
+    void shouldGetMonthPeriods() {
         // GIVEN
         Calendar currentCalendar = Calendar.getInstance(TimeZone.getTimeZone(OFFSET));
         currentCalendar.set(Calendar.DATE, 1);

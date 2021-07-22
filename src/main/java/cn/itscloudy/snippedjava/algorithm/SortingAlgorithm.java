@@ -1,6 +1,6 @@
 package cn.itscloudy.snippedjava.algorithm;
 
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public enum SortingAlgorithm {
     SELECTION(SortingAlgorithm::selection),
@@ -9,12 +9,13 @@ public enum SortingAlgorithm {
     QS(SortingAlgorithm::qs), // quick sort
     HEAP(SortingAlgorithm::heap),
     SHELL(null),
-    RADIX(null),
+    RADIX(SortingAlgorithm::radix),
+    COUNT(null),
     ;
 
-    private final Function<int[], int[]> algorithm;
+    private final UnaryOperator<int[]> algorithm;
 
-    SortingAlgorithm(Function<int[], int[]> algorithm) {
+    SortingAlgorithm(UnaryOperator<int[]> algorithm) {
         this.algorithm = algorithm;
     }
 
@@ -23,23 +24,7 @@ public enum SortingAlgorithm {
     }
 
     public int[] sort(int[] arr) {
-        int[] sortedArr = algorithm.apply(arr);
-        printArr(sortedArr);
-        return sortedArr;
-    }
-
-    private void printArr(int[] arr) {
-        System.out.print(name() + " -> ");
-        boolean firstPrinted = false;
-        for (int i : arr) {
-            if (firstPrinted) {
-                System.out.print(", ");
-            } else {
-                firstPrinted = true;
-            }
-            System.out.print(i);
-        }
-        System.out.println();
+        return algorithm.apply(arr);
     }
 
     private static void swap(int[] arr, int a, int b) {
@@ -138,4 +123,64 @@ public enum SortingAlgorithm {
         }
     }
 
+    private static int[] radix(int[] arr) {
+        int max = arr[0];
+        for (int i = 1; i < arr.length; i++) {
+            if (arr[i] > max) {
+                max = Math.abs(arr[i]);
+            }
+        }
+
+        int maxDigit = 1;
+        while ((max /= 10) > 0) {
+            maxDigit++;
+        }
+
+        for (int i = 1; i <= maxDigit; i++) {
+            arr = sortDigit(arr, i);
+        }
+        return arr;
+    }
+
+    private static int[] sortDigit(int[] arr, int digit) {
+        int[] counts = new int[20];
+
+        int dividend = powerOf10(digit - 1);
+        for (int i : arr) {
+            int i1 = getDigitIndex(dividend, i);
+            counts[i1]++;
+        }
+
+        int[] pointers = new int[20];
+        for (int i = 1; i < 20; i++) {
+            pointers[i] = pointers[i - 1] + counts[i - 1];
+        }
+
+        int[] newArr = new int[arr.length];
+        for (int i : arr) {
+            int index = pointers[getDigitIndex(dividend, i)]++;
+            newArr[index] = i;
+        }
+
+        return newArr;
+    }
+
+    private static int getDigitIndex(int dividend, int i) {
+        int index = (i / dividend) % 10;
+        if (i < 0) {
+            index += 9;
+        } else {
+            index += 10;
+        }
+        return index;
+    }
+
+    private static int powerOf10(int exponent) {
+        int result = 1;
+        while (exponent > 0) {
+            result *= 10;
+            exponent--;
+        }
+        return result;
+    }
 }

@@ -4,14 +4,14 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class AccountFlagTest {
+class AccountFlagTest {
 
     private final Role boss = new Role(1, "MANAGER");
     private final Role manager = new Role(2, "MANAGER");
     private final Role worker = new Role(3, "WORKER");
 
     @Test
-    public void shouldAddRolesToAccount() {
+    void shouldAddRolesToAccount() {
         Account account = new Account();
         account.addFlag(boss).addFlag(manager);
 
@@ -26,7 +26,7 @@ public class AccountFlagTest {
     }
 
     @Test
-    public void shouldRemoveRolesFromAccount() {
+    void shouldRemoveRolesFromAccount() {
         Account account = new Account();
         account.addFlag(boss).addFlag(manager).addFlag(worker);
         account.removeFlag(boss).removeFlag(manager);

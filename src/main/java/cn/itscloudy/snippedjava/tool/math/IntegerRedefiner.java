@@ -2,7 +2,7 @@ package cn.itscloudy.snippedjava.tool.math;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BiFunction;
+import java.util.function.IntBinaryOperator;
 
 /**
  * Redefine the symbol of some numbers. <p>
@@ -15,11 +15,11 @@ public abstract class IntegerRedefiner {
     private final Map<Character, Integer> charIntMap;
     private final int radix;
 
-    public IntegerRedefiner(char... chars) {
+    protected IntegerRedefiner(char... chars) {
         this(chars, '-');
     }
 
-    public IntegerRedefiner(char[] chars, char negative) {
+    protected IntegerRedefiner(char[] chars, char negative) {
         this.charIntMap = new HashMap<>();
         if (chars.length < Character.MIN_RADIX) {
             throw new NumberFormatException("radix " + chars.length +
@@ -71,14 +71,14 @@ public abstract class IntegerRedefiner {
         return operate(a, b, (iA, iB) -> iA % iB);
     }
 
-    private String operate(String a, String b, BiFunction<Integer, Integer, Integer> intOperation) {
+    private String operate(String a, String b, IntBinaryOperator intOperation) {
         if (empty(a) || empty(b)) {
             throw new NumberFormatException("A and B must not be empty");
         }
         int intA = stringToInt(a);
         int intB = stringToInt(b);
 
-        Integer opResult = intOperation.apply(intA, intB);
+        int opResult = intOperation.applyAsInt(intA, intB);
         return intToString(opResult);
     }
 
@@ -89,15 +89,15 @@ public abstract class IntegerRedefiner {
     private int stringToInt(String s) {
         int result = 0;
         int base = 1;
-        char[] chars = s.toCharArray();
-        boolean negative = chars[0] == this.negative;
-        int firstIndex = negative ? 1 : 0;
-        for (int i = chars.length - 1; i >= firstIndex; i--) {
-            char c = chars[i];
+        char[] sChars = s.toCharArray();
+        boolean sNegative = sChars[0] == this.negative;
+        int firstIndex = sNegative ? 1 : 0;
+        for (int i = sChars.length - 1; i >= firstIndex; i--) {
+            char c = sChars[i];
             result += base * charToInt(c);
             base *= radix;
         }
-        return negative ? -result : result;
+        return sNegative ? -result : result;
     }
 
     private Integer charToInt(char c) {

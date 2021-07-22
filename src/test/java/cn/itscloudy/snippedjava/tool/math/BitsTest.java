@@ -10,7 +10,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class BitsTest {
+class BitsTest {
 
     @ParameterizedTest(name = "Init by size {0}")
     @CsvSource({
@@ -18,7 +18,7 @@ public class BitsTest {
             "1",
             "0"
     })
-    public void shouldInitBySize(int size) {
+    void shouldInitBySize(int size) {
         Bits bits = Bits.ofSize(size);
         assertEquals(size, bits.size());
 
@@ -34,7 +34,7 @@ public class BitsTest {
             "1024, 10",
             "1025, 10|0",
     })
-    public void shouldInitByDecimal(long decimal, @ConvertWith(CsvIntArrConverter.class) int[] indices) {
+    void shouldInitByDecimal(long decimal, @ConvertWith(CsvIntArrConverter.class) int[] indices) {
         Bits bits = Bits.ofDecimal(decimal);
         for (int index : indices) {
             assertTrue(bits.testBit(index));
@@ -48,7 +48,7 @@ public class BitsTest {
             "10110, 1|2|4",
             "111, 0|1|2"
     })
-    public void shouldInitByBitString(String bitString, @ConvertWith(CsvIntArrConverter.class) int[] indices) {
+    void shouldInitByBitString(String bitString, @ConvertWith(CsvIntArrConverter.class) int[] indices) {
         Bits bits = Bits.ofBitString(bitString);
         for (int index : indices) {
             assertTrue(bits.testBit(index));
@@ -63,7 +63,7 @@ public class BitsTest {
             "10, 4",
             "1F, 0|1|2|3|4"
     })
-    public void shouldInitByHexString(String hexString, @ConvertWith(CsvIntArrConverter.class) int[] indices) {
+    void shouldInitByHexString(String hexString, @ConvertWith(CsvIntArrConverter.class) int[] indices) {
         Bits bits = Bits.ofHexString(hexString);
         for (int index : indices) {
             assertTrue(bits.testBit(index));
@@ -77,7 +77,7 @@ public class BitsTest {
             "1010, 1|3",
             "11010, 1|3|4",
     })
-    public void shouldTo0BasedIndices(String bitString, @ConvertWith(CsvIntArrConverter.class) int[] expectations) {
+    void shouldTo0BasedIndices(String bitString, @ConvertWith(CsvIntArrConverter.class) int[] expectations) {
         Bits bits = Bits.ofBitString(bitString);
         List<Integer> indices = bits.to0BasedIndices();
         assertEquals(expectations.length, indices.size());
@@ -94,7 +94,7 @@ public class BitsTest {
             "1010, 2|4",
             "11010, 2|4|5",
     })
-    public void shouldTo1BasedIndices(String bitString, @ConvertWith(CsvIntArrConverter.class) int[] expectations) {
+    void shouldTo1BasedIndices(String bitString, @ConvertWith(CsvIntArrConverter.class) int[] expectations) {
         Bits bits = Bits.ofBitString(bitString);
         List<Integer> indices = bits.to1basedIndices();
         assertEquals(expectations.length, indices.size());
@@ -109,7 +109,7 @@ public class BitsTest {
             "1, 1",
             "1010, 1010",
     })
-    public void shouldToBitString(String bitString, String expectation) {
+    void shouldToBitString(String bitString, String expectation) {
         Bits bits = Bits.ofBitString(bitString);
         assertEquals(expectation, bits.toBitString());
     }
@@ -120,7 +120,7 @@ public class BitsTest {
             "1, 1",
             "1010, 0101",
     })
-    public void shouldToRecBitString(String bitString, String expectation) {
+    void shouldToRecBitString(String bitString, String expectation) {
         Bits bits = Bits.ofBitString(bitString);
         assertEquals(expectation, bits.toRevBitString());
     }
@@ -132,7 +132,7 @@ public class BitsTest {
             "1010, A",
             "11010, 1A",
     })
-    public void shouldToHexString(String bitString, String expectation) {
+    void shouldToHexString(String bitString, String expectation) {
         Bits bits = Bits.ofBitString(bitString);
         assertEquals(expectation, bits.toHexString());
     }
@@ -144,7 +144,7 @@ public class BitsTest {
             "1010, 10",
             "11010, 26",
     })
-    public void shouldToDecimal(String bitString, int expectation) {
+    void shouldToDecimal(String bitString, int expectation) {
         Bits bits = Bits.ofBitString(bitString);
         assertEquals(expectation, bits.toDecimal());
     }
@@ -156,7 +156,7 @@ public class BitsTest {
             "1010, 101, 1111",
             "100, 0011, 0111",
     })
-    public void shouldInclude(String a, String b, String expectation) {
+    void shouldInclude(String a, String b, String expectation) {
         Bits bitsA = Bits.ofBitString(a);
         Bits bitsB = Bits.ofBitString(b);
         bitsA.include(bitsB);
@@ -170,7 +170,7 @@ public class BitsTest {
             "1111, 101, 1010",
             "1011, 0011, 1000",
     })
-    public void shouldExclude(String a, String b, String expectation) {
+    void shouldExclude(String a, String b, String expectation) {
         Bits bitsA = Bits.ofBitString(a);
         Bits bitsB = Bits.ofBitString(b);
         bitsA.exclude(bitsB);
@@ -184,7 +184,7 @@ public class BitsTest {
             "1111, 101, 1010",
             "1011, 0011, 1000",
     })
-    public void shouldGetSubtract(String a, String b, String expectation) {
+    void shouldGetSubtract(String a, String b, String expectation) {
         Bits bitsA = Bits.ofBitString(a);
         Bits bitsB = Bits.ofBitString(b);
         Bits subtraction = bitsA.subtract(bitsB);
@@ -198,7 +198,7 @@ public class BitsTest {
             "1010, 0101",
             "11001011, 00110100",
     })
-    public void shouldInvert(String origin, String complement) {
+    void shouldInvert(String origin, String complement) {
         Bits bits = Bits.ofBitString(origin);
         bits.invert();
         assertEquals(complement, bits.toBitString());
@@ -211,14 +211,14 @@ public class BitsTest {
             "1010, 1010",
             "11001011, 11001011",
     })
-    public void shouldGetCopy(String origin, String copy) {
+    void shouldGetCopy(String origin, String copy) {
         Bits bits = Bits.ofBitString(origin);
         Bits copedBits = bits.copy();
         assertEquals(copy, copedBits.toBitString());
     }
 
     @Test
-    public void shouldEquals() {
+    void shouldEquals() {
         String sameBits = "10110";
         Bits bits1 = Bits.ofBitString(sameBits);
         Bits bits2 = Bits.ofBitString(sameBits);

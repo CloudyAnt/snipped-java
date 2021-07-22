@@ -7,20 +7,17 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class HeapPollutionTest {
+class HeapPollutionTest {
 
     @Test
-    public void shouldThrowClassCastException() {
+    void shouldThrowClassCastException() {
         HeapPollution hp = new HeapPollution();
 
-        assertThrows(ClassCastException.class, () -> {
-            Integer[] caller = hp.polluterCaller(1);
-            System.out.println(Arrays.toString(caller));
-        });
+        assertThrows(ClassCastException.class, () -> hp.polluterCaller(1));
     }
 
     @Test
-    public void shouldNotThrowException() {
+    void shouldNotThrowException() {
         HeapPollution hp = new HeapPollution();
 
         assertDoesNotThrow(() -> {

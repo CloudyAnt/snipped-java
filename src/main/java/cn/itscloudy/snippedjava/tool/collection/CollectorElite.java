@@ -8,8 +8,8 @@ public class CollectorElite {
     private CollectorElite() {
     }
 
-    public static <O, K, V> HashMap<K, V> map(Collection<O> collection, Function<O, K> keyMapper,
-                                              Function<O, V> valueMapper) {
+    public static <O, K, V> Map<K, V> map(Collection<O> collection, Function<O, K> keyMapper,
+                                          Function<O, V> valueMapper) {
         HashMap<K, V> map = new HashMap<>(collection.size());
         for (O o : collection) {
             map.put(keyMapper.apply(o), valueMapper.apply(o));
@@ -17,16 +17,16 @@ public class CollectorElite {
         return map;
     }
 
-    public static <O, K> HashMap<K, O> map(Collection<O> collection, Function<O, K> keyMapper) {
+    public static <O, K> Map<K, O> map(Collection<O> collection, Function<O, K> keyMapper) {
         return map(collection, keyMapper, v -> v);
     }
 
-    public static <O, K> HashMap<K, List<O>> classify(Collection<O> collection, Function<O, K> keyMapper) {
+    public static <O, K> Map<K, List<O>> classify(Collection<O> collection, Function<O, K> keyMapper) {
         return classify(collection, keyMapper, o -> o);
     }
 
-    public static <O, K, V> HashMap<K, List<V>> classify(Collection<O> collection, Function<O, K> keyMapper,
-                                                         Function<O, V> valueMapper) {
+    public static <O, K, V> Map<K, List<V>> classify(Collection<O> collection, Function<O, K> keyMapper,
+                                                     Function<O, V> valueMapper) {
         Set<K> keys = mapSet(collection, keyMapper);
         HashMap<K, List<V>> map = new HashMap<>(keys.size());
         for (K key : keys) {
@@ -41,7 +41,7 @@ public class CollectorElite {
         return map;
     }
 
-    public static <A, B> ArrayList<B> mapList(Collection<A> collection, Function<A, B> bMapper) {
+    public static <A, B> List<B> mapList(Collection<A> collection, Function<A, B> bMapper) {
         ArrayList<B> list = new ArrayList<>(collection.size());
         for (A a : collection) {
             list.add(bMapper.apply(a));
@@ -50,7 +50,7 @@ public class CollectorElite {
         return list;
     }
 
-    public static <A, B> ArrayList<B> mapList(Collection<A> collection, Function<A, B> bMapper, Predicate<A> predicate) {
+    public static <A, B> List<B> mapList(Collection<A> collection, Function<A, B> bMapper, Predicate<A> predicate) {
         ArrayList<B> list = new ArrayList<>(collection.size());
         for (A a : collection) {
             if (predicate.test(a)) {
@@ -61,7 +61,7 @@ public class CollectorElite {
         return list;
     }
 
-    public static <A, B> ArrayList<B> mapFlatList(Collection<A> collection, Function<A, Collection<B>> bsMapper) {
+    public static <A, B> List<B> mapFlatList(Collection<A> collection, Function<A, Collection<B>> bsMapper) {
         ArrayList<B> list = new ArrayList<>(collection.size());
         for (A a : collection) {
             list.addAll(bsMapper.apply(a));
@@ -69,7 +69,7 @@ public class CollectorElite {
         return list;
     }
 
-    public static <A, B> HashSet<B> mapSet(Collection<A> collection, Function<A, B> bMapper) {
+    public static <A, B> Set<B> mapSet(Collection<A> collection, Function<A, B> bMapper) {
         HashSet<B> set = new HashSet<>(collection.size());
         for (A a : collection) {
             set.add(bMapper.apply(a));
@@ -78,7 +78,7 @@ public class CollectorElite {
         return set;
     }
 
-    public static <A, B> HashSet<B> mapFlatSet(Collection<A> collection, Function<A, Collection<B>> bsMapper) {
+    public static <A, B> Set<B> mapFlatSet(Collection<A> collection, Function<A, Collection<B>> bsMapper) {
         HashSet<B> set = new HashSet<>(collection.size());
         for (A a : collection) {
             set.addAll(bsMapper.apply(a));
@@ -189,7 +189,7 @@ public class CollectorElite {
         return fs.size();
     }
 
-    public static <A, B> HashSet<A> mapKeysByValue(Map<A, B> map, Predicate<B> bPredicate) {
+    public static <A, B> Set<A> mapKeysByValue(Map<A, B> map, Predicate<B> bPredicate) {
         HashSet<A> set = new HashSet<>();
         map.forEach((key, value) -> {
             if (bPredicate.test(value)) {
@@ -246,7 +246,7 @@ public class CollectorElite {
      */
     private static <A> void iterateAndFindMatch(Collection<A> provider, Collection<A> base,
                                                 BiPredicate<A, A> comparator,
-                                                BiConsumer<Boolean, A> resultConsumer) {
+                                                ResultConsumer<A> resultConsumer) {
         for (A a : provider) {
             boolean match = false;
             for (A a1 : base) {
@@ -257,6 +257,11 @@ public class CollectorElite {
             }
             resultConsumer.accept(match, a);
         }
+    }
+
+    @FunctionalInterface
+    private interface ResultConsumer<A> {
+        void accept(boolean result, A a);
     }
 
     public static <A> Optional<A> findAny(Collection<A> as, Predicate<A> predicate) {
@@ -281,15 +286,7 @@ public class CollectorElite {
         F ultra = null;
         for (A a : as) {
             F f = fieldGetter.apply(a);
-            if (ultra == null) {
-                ultra = f;
-                continue;
-            }
-            if (f == null) {
-                continue;
-            }
-            int i = f.compareTo(ultra);
-            if (predicate.test(i)) {
+            if (f != null && (ultra == null || predicate.test(f.compareTo(ultra)))) {
                 ultra = f;
             }
         }

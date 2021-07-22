@@ -46,7 +46,7 @@ public interface Flag {
 
     class Operator {
 
-        public int flags;
+        private int flags;
 
         private Operator(int flags) {
             this.flags = flags;

@@ -14,9 +14,21 @@ import java.util.function.Supplier;
 public class OptionalResult<T> {
     private Exception e;
     private T value;
+    private long mills;
 
     private OptionalResult() {
 
+    }
+
+    public static <T> OptionalResult<T> of(Supplier<? extends T> supplier, boolean recordMills) {
+        if (!recordMills) {
+            return of(supplier);
+        }
+
+        long startTime = System.currentTimeMillis();
+        OptionalResult<T> result = of(supplier);
+        result.mills = System.currentTimeMillis() - startTime;
+        return result;
     }
 
     public static <T> OptionalResult<T> of(Supplier<? extends T> supplier) {
@@ -76,6 +88,10 @@ public class OptionalResult<T> {
 
     public Exception exception() {
         return e;
+    }
+
+    public long mills() {
+        return mills;
     }
 
     public Optional<T> optional() {

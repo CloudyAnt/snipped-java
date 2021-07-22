@@ -4,10 +4,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class FlagTest {
+class FlagTest {
 
     @Test
-    public void shouldCombineFlags() {
+    void shouldCombineFlags() {
         int flags = Flag.collect(Feature.A, Feature.B);
 
         int expected = Feature.A.flagValue() + Feature.B.flagValue();
@@ -18,7 +18,7 @@ public class FlagTest {
     }
 
     @Test
-    public void shouldAddFlag() {
+    void shouldAddFlag() {
         int flags = Flag.operate(1)
                 .add(Feature.B)
                 .toFlags();
@@ -31,7 +31,7 @@ public class FlagTest {
     }
 
     @Test
-    public void shouldRemoveFlag() {
+    void shouldRemoveFlag() {
         int flags = Flag.operate(7)
                 .remove(Feature.A)
                 .toFlags();
