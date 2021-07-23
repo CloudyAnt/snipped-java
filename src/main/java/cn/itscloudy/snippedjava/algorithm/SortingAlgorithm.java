@@ -10,7 +10,7 @@ public enum SortingAlgorithm {
     HEAP(SortingAlgorithm::heap),
     SHELL(null),
     RADIX(SortingAlgorithm::radix),
-    COUNT(null),
+    COUNT(SortingAlgorithm::count),
     ;
 
     private final UnaryOperator<int[]> algorithm;
@@ -180,6 +180,35 @@ public enum SortingAlgorithm {
         while (exponent > 0) {
             result *= 10;
             exponent--;
+        }
+        return result;
+    }
+
+    public static int[] count(int[] arr) {
+        int min = 0;
+        int max = 0;
+        for (int i : arr) {
+            if (i > max) {
+                max = i;
+            } else if (i < min) {
+                min = i;
+            }
+        }
+
+        int len = max - min + 1;
+        int[] counts = new int[len];
+        for (int i : arr) {
+            counts[i - min]++;
+        }
+
+        int[] result = new int[arr.length];
+        int resultIndex = 0;
+        for (int count : counts) {
+            while (count > 0) {
+                result[resultIndex++] = min;
+                count--;
+            }
+            min++;
         }
         return result;
     }
