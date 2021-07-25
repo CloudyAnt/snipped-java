@@ -8,7 +8,7 @@ public enum SortingAlgorithm {
     INSERTION(SortingAlgorithm::insertion),
     QS(SortingAlgorithm::qs), // quick sort
     HEAP(SortingAlgorithm::heap),
-    SHELL(null),
+    SHELL(SortingAlgorithm::shell),
     RADIX(SortingAlgorithm::radix),
     COUNT(SortingAlgorithm::count),
     ;
@@ -211,5 +211,38 @@ public enum SortingAlgorithm {
             min++;
         }
         return result;
+    }
+
+    public static int[] shell(int[] arr) {
+        int gap = arr.length / 2;
+        while (gap > 0) {
+            s0(arr, gap);
+            gap--;
+        }
+        return arr;
+    }
+
+    private static void s0(int[] arr, int gap) {
+        int cur = 0;
+        int next = cur + gap;
+        while (next < arr.length) {
+            if (arr[cur] > arr[next]) {
+                swap(arr, cur, next);
+                s1(arr, gap, cur);
+            }
+            cur += gap;
+            next += gap;
+        }
+    }
+
+    private static void s1(int[] arr, int gap, int cur) {
+        int previous = cur - gap;
+        while (previous >= 0) {
+            if (arr[cur] < arr[previous]) {
+                swap(arr, cur, previous);
+            }
+            cur -= gap;
+            previous -= gap;
+        }
     }
 }

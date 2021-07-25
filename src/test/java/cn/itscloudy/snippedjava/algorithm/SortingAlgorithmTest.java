@@ -12,6 +12,13 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 class SortingAlgorithmTest {
 
     private final Random random = new Random();
+    private final int[] longArray;
+    private final int[] shuffledLongArray;
+    {
+        longArray = generateOrderedArrayWithLength1000();
+        shuffledLongArray = Arrays.copyOf(longArray, longArray.length);
+        randomSwapArr(shuffledLongArray);
+    }
 
     @ParameterizedTest(name = "sort by algorithm ${0}")
     @EnumSource(SortingAlgorithm.class)
@@ -24,14 +31,10 @@ class SortingAlgorithmTest {
         int[] arr2 = new int[]{9, 8, 7, 6, 5, 4, 3, 2, 1, 0, -1, -2};
         int[] arr3 = new int[]{21, 39, -72, 18, 32, -10, 98, 12, 56, 28, -1, 10};
 
-        int[] expects4 = generateOrderedArrayWithLength1000();
-        int[] arr4 = Arrays.copyOf(expects4, expects4.length);
-        randomSwapArr(arr4);
-
         test(algorithm, arr1, new int[]{-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
         test(algorithm, arr2, new int[]{-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
         test(algorithm, arr3, new int[]{-72, -10, -1, 10, 12, 18, 21, 28, 32, 39, 56, 98});
-        test(algorithm, arr4, expects4);
+        test(algorithm, Arrays.copyOf(shuffledLongArray, shuffledLongArray.length), longArray);
     }
 
     private void test(SortingAlgorithm algorithm, int[] arrayToSort, int[] expectedResultValue) {
