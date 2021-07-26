@@ -13,6 +13,7 @@ base package:
 - tool [useful utilities]
     - collection
     - math
+    - other
     - time
 - trick [all kinds of tricks]
     - lang [covert language tricks]

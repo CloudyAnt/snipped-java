@@ -1,5 +1,6 @@
 package cn.itscloudy.snippedjava.algorithm;
 
+import java.util.Arrays;
 import java.util.function.UnaryOperator;
 
 public enum SortingAlgorithm {
@@ -8,9 +9,11 @@ public enum SortingAlgorithm {
     INSERTION(SortingAlgorithm::insertion),
     QS(SortingAlgorithm::qs), // quick sort
     HEAP(SortingAlgorithm::heap),
+    MERGE(SortingAlgorithm::merge),
     SHELL(SortingAlgorithm::shell),
     RADIX(SortingAlgorithm::radix),
-    COUNT(SortingAlgorithm::count),
+    BUCKET(SortingAlgorithm::bucket),
+    COUNTING(SortingAlgorithm::counting),
     ;
 
     private final UnaryOperator<int[]> algorithm;
@@ -73,7 +76,7 @@ public enum SortingAlgorithm {
         return arr;
     }
 
-    public static void qs0(int[] arr, int l, int r) {
+    private static void qs0(int[] arr, int l, int r) {
         if (l < r) {
             int partitionIndex = partition(arr, l, r);
             qs0(arr, l, partitionIndex - 1);
@@ -184,7 +187,7 @@ public enum SortingAlgorithm {
         return result;
     }
 
-    public static int[] count(int[] arr) {
+    private static int[] counting(int[] arr) {
         int min = 0;
         int max = 0;
         for (int i : arr) {
@@ -213,36 +216,124 @@ public enum SortingAlgorithm {
         return result;
     }
 
-    public static int[] shell(int[] arr) {
+    private static int[] shell(int[] arr) {
         int gap = arr.length / 2;
         while (gap > 0) {
-            s0(arr, gap);
+            shellSort(arr, gap);
             gap--;
         }
         return arr;
     }
 
-    private static void s0(int[] arr, int gap) {
+    private static void shellSort(int[] arr, int gap) {
         int cur = 0;
         int next = cur + gap;
         while (next < arr.length) {
             if (arr[cur] > arr[next]) {
                 swap(arr, cur, next);
-                s1(arr, gap, cur);
+                shellSort1(arr, gap, cur);
             }
             cur += gap;
             next += gap;
         }
     }
 
-    private static void s1(int[] arr, int gap, int cur) {
+    private static void shellSort1(int[] arr, int gap, int cur) {
         int previous = cur - gap;
         while (previous >= 0) {
-            if (arr[cur] < arr[previous]) {
-                swap(arr, cur, previous);
+            if (arr[cur] >= arr[previous]) {
+                break;
             }
+            swap(arr, cur, previous);
             cur -= gap;
             previous -= gap;
         }
+    }
+
+    private static int[] bucket(int[] arr) {
+        int len = arr.length;
+
+        int max;
+        int min;
+        max = min = arr[0];
+        for (int i = 1; i < arr.length; i++) {
+            if (arr[i] > max) {
+                max = arr[i];
+            } else if (arr[i] < min) {
+                min = arr[i];
+            }
+        }
+        int length = max - min + 1;
+
+        // calculate each bucket sizes
+        int[] bucketSizes = new int[len];
+        for (int i : arr) {
+            int bkIdx = ((i - min) * len) / length;
+            bucketSizes[bkIdx]++;
+        }
+
+        // calculate each bucket start index
+        int[] bucketStarts = new int[len + 1];
+        bucketStarts[len] = len;
+        for (int i = 1; i < len; i++) {
+            bucketStarts[i] = bucketStarts[i - 1] + bucketSizes[i - 1];
+        }
+
+        // put elements to buckets
+        int[] bucketIndices = Arrays.copyOf(bucketStarts, len);
+        int[] newArr = new int[len];
+        for (int i : arr) {
+            int bkIdx = ((i - min) * len) / length;
+            int index = bucketIndices[bkIdx]++;
+            newArr[index] = i;
+        }
+
+        // sort each bucket by insertion sort
+        for (int i = 0; i < len; i++) {
+            insertion(newArr, bucketStarts[i], bucketStarts[i + 1]);
+        }
+        return newArr;
+    }
+
+    private static void insertion(int[] newArr, int start, int end) {
+        for (int i = start; i < end - 1; i++) {
+            for (int j = i + 1; j > 0; j--) {
+                if (newArr[j] > newArr[j - 1]) {
+                    break;
+                }
+                swap(newArr, j, j - 1);
+            }
+        }
+    }
+
+    private static int[] merge(int[] arr) {
+        mergeSort(arr, 0, arr.length);
+        return arr;
+    }
+
+    private static void mergeSort(int[] arr, int l, int r) {
+        int length = r - l;
+        if (length > 2) {
+            int middle = length / 2 + l;
+            mergeSort(arr, l, middle);
+            mergeSort(arr, middle, r);
+
+            int[] merge = new int[length];
+            int li = l;
+            int ri = middle;
+            for (int i = 0; i < length; i++) {
+                if (li < middle && (ri == r || arr[li] <= arr[ri])) {
+                    merge[i] = arr[li++];
+                } else {
+                    merge[i] = arr[ri++];
+                }
+            }
+            System.arraycopy(merge, 0, arr, l, length);
+        } else if (length == 2) {
+            if (arr[l] > arr[r - 1]) {
+                swap(arr, l, r - 1);
+            }
+        }
+
     }
 }
