@@ -277,7 +277,7 @@ class CollectorEliteTest {
     }
 
     @SafeVarargs
-    private final <T> void assertListValues(List<T> list, T... ts) {
+    private <T> void assertListValues(List<T> list, T... ts) {
         assertEquals(ts.length, list.size());
         for (int i = 0; i < ts.length; i++) {
             assertEquals(ts[i], list.get(i));
@@ -285,7 +285,7 @@ class CollectorEliteTest {
     }
 
     @SafeVarargs
-    private final <T> void assertSetContains(Set<T> set, T... ts) {
+    private <T> void assertSetContains(Set<T> set, T... ts) {
         assertEquals(ts.length, set.size());
         for (T t : ts) {
             assertTrue(set.contains(t));

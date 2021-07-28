@@ -329,11 +329,8 @@ public enum SortingAlgorithm {
                 }
             }
             System.arraycopy(merge, 0, arr, l, length);
-        } else if (length == 2) {
-            if (arr[l] > arr[r - 1]) {
-                swap(arr, l, r - 1);
-            }
+        } else if (length == 2 && arr[l] > arr[r - 1]) {
+            swap(arr, l, r - 1);
         }
-
     }
 }

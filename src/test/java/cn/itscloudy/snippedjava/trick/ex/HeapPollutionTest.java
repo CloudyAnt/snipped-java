@@ -13,7 +13,10 @@ class HeapPollutionTest {
     void shouldThrowClassCastException() {
         HeapPollution hp = new HeapPollution();
 
-        assertThrows(ClassCastException.class, () -> hp.polluterCaller(1));
+        assertThrows(ClassCastException.class, () -> {
+            Integer[] integers = hp.polluterCaller(1);
+            System.out.println(integers.length);
+        });
     }
 
     @Test
