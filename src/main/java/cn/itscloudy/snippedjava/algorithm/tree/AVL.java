@@ -3,12 +3,9 @@ package cn.itscloudy.snippedjava.algorithm.tree;
 /**
  * Self-balancing binary search tree(named after inventors Adelson-Velsky and Landis)
  */
-public class AVL extends BinaryTree<AVLNode> {
-    protected AVLNode top;
+public class AVL implements BST<AVL.AVLNode> {
 
-    public AVL(int i, String words) {
-        this.top = new AVLNode(i, words);
-    }
+    protected AVLNode top;
 
     @Override
     public AVLNode top() {
@@ -17,17 +14,16 @@ public class AVL extends BinaryTree<AVLNode> {
 
     @Override
     public void insert(int i, String words) {
-        top = insert(new AVLNode(i, words), top);
-    }
-
-    private void resetHeightOf(AVLNode parent) {
-        int leftHeight = parent.left == null ? 0 : parent.left.height;
-        int rightHeight = parent.right == null ? 0 : parent.right.height;
-        parent.height = Math.max(leftHeight, rightHeight) + 1;
+        AVLNode node = new AVLNode(i, words);
+        if (this.top == null) {
+            this.top = node;
+        } else {
+            this.top = insert(node, this.top);
+        }
     }
 
     private AVLNode insert(AVLNode node, AVLNode parent) {
-        if (destInLeft(node, parent)) {
+        if (parent.leftMightContain(node)) {
             if (parent.left == null) {
                 parent.left = node;
             } else {
@@ -45,6 +41,12 @@ public class AVL extends BinaryTree<AVLNode> {
         return balance(parent);
     }
 
+    protected void resetHeightOf(AVLNode parent) {
+        int leftHeight = parent.left == null ? 0 : parent.left.height;
+        int rightHeight = parent.right == null ? 0 : parent.right.height;
+        parent.height = Math.max(leftHeight, rightHeight) + 1;
+    }
+
     private AVLNode balance(AVLNode parent) {
         int leftHeight = parent.left == null ? 0 : parent.left.height;
         int rightHeight = parent.right == null ? 0 : parent.right.height;
@@ -58,24 +60,36 @@ public class AVL extends BinaryTree<AVLNode> {
         return parent;
     }
 
-    private AVLNode rightRotate(AVLNode node) {
-        AVLNode left = node.left;
+    /**
+     * Right rotate and get the new parent
+     *
+     * @param parent The node of rotation based on
+     * @return The new parent
+     */
+    private AVLNode rightRotate(AVLNode parent) {
+        AVLNode left = parent.left;
         AVLNode leftRight = left.right;
-        left.right = node;
-        node.left = leftRight;
+        left.right = parent;
+        parent.left = leftRight;
 
-        resetHeightOf(node);
+        resetHeightOf(parent);
         resetHeightOf(left);
         return left;
     }
 
-    private AVLNode leftRotate(AVLNode node) {
-        AVLNode right = node.right;
+    /**
+     * Left rotate and get the new parent
+     *
+     * @param parent The node of rotation based on
+     * @return The new parent
+     */
+    private AVLNode leftRotate(AVLNode parent) {
+        AVLNode right = parent.right;
         AVLNode rightLeft = right.left;
-        right.left = node;
-        node.right = rightLeft;
+        right.left = parent;
+        parent.right = rightLeft;
 
-        resetHeightOf(node);
+        resetHeightOf(parent);
         resetHeightOf(right);
         return right;
     }
@@ -98,10 +112,10 @@ public class AVL extends BinaryTree<AVLNode> {
     /**
      * Delete and find the orphan
      *
-     * @return orphan
+     * @return Orphan
      */
     private AVLNode deleteAndGetOrphan(int i, AVLNode parent) {
-        if (destInLeft(i, parent)) {
+        if (parent.leftMightContain(i)) {
             AVLNode left = parent.left;
             if (left == null) {
                 return null;
@@ -126,5 +140,18 @@ public class AVL extends BinaryTree<AVLNode> {
                 return deleteAndGetOrphan(i, parent.right);
             }
         }
+    }
+
+    /**
+     * Avl tree node
+     */
+    static class AVLNode extends BSTNode<AVLNode> {
+        protected int height;
+
+        public AVLNode(int i, String words) {
+            super(i, words);
+            this.height = 1;
+        }
+
     }
 }

@@ -4,11 +4,12 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class BinarySearchTreeTest {
+public class SimpleBSTTest {
 
     @Test
     public void shouldInsert() {
-        BinarySearchTree tree = new BinarySearchTree(10, "10");
+        SimpleBST tree = new SimpleBST();
+        tree.insert(10, "10");
         tree.insert(5, "5");
         tree.insert(15, "15");
         tree.insert(5, "another 5");
@@ -28,7 +29,8 @@ public class BinarySearchTreeTest {
 
     @Test
     public void shouldSearch() {
-        BinarySearchTree tree = new BinarySearchTree(10, "10");
+        SimpleBST tree = new SimpleBST();
+        tree.insert(10, "10");
         tree.insert(5, "5");
         tree.insert(15, "15");
         tree.insert(6, "6");

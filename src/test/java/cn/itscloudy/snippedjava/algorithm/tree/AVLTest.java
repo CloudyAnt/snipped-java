@@ -8,7 +8,8 @@ public class AVLTest {
 
     @Test
     public void shouldRotateToRight() {
-        AVL avl = new AVL(10, "10");
+        AVL avl = new AVL();
+        avl.insert(10, "10");
         avl.insert(9, "9");
         avl.insert(8, "8");
 
@@ -19,7 +20,8 @@ public class AVLTest {
 
     @Test
     public void shouldRotateToLeft() {
-        AVL avl = new AVL(10, "10");
+        AVL avl = new AVL();
+        avl.insert(10, "10");
         avl.insert(11, "11");
         avl.insert(12, "12");
 
@@ -30,7 +32,8 @@ public class AVLTest {
 
     @Test
     public void shouldDelete() {
-        AVL avl = new AVL(10, "10");
+        AVL avl = new AVL();
+        avl.insert(10, "10");
         avl.insert(5, "5");
         avl.insert(20, "20");
         avl.insert(4, "4");
