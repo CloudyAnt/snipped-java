@@ -6,15 +6,31 @@ import java.util.List;
 /**
  * Binary Search Tree
  */
-public interface BST<N extends BSTNode<N>> {
+public abstract class BST<N extends BSTNode<N>> {
 
-    N top();
+    public abstract N top();
 
-    void insert(int i, String words);
+    public abstract void insert(int i, String words);
 
-    void delete(int i);
+    protected static <N extends BSTNode<N>> void insert(N node, N parent) {
+        if (parent.leftMightContain(node)) {
+            if (parent.left == null) {
+                parent.left = node;
+            } else {
+                insert(node, parent.left);
+            }
+        } else {
+            if (parent.right == null) {
+                parent.right = node;
+            } else {
+                insert(node, parent.right);
+            }
+        }
+    }
 
-    default N search(int i) {
+    public abstract void delete(int i);
+
+    public N search(int i) {
         return search(i, top());
     }
 
@@ -31,11 +47,39 @@ public interface BST<N extends BSTNode<N>> {
         return search(i, parent.right);
     }
 
-    default void print() {
+    /**
+     * Right rotate and get the new parent
+     *
+     * @param parent The node of rotation based on
+     * @return The new parent
+     */
+    protected N rightRotate(N parent) {
+        N l = parent.left;
+        N lr = l.right;
+        l.right = parent;
+        parent.left = lr;
+        return l;
+    }
+
+    /**
+     * Left rotate and get the new parent
+     *
+     * @param parent The node of rotation based on
+     * @return The new parent
+     */
+    protected N leftRotate(N parent) {
+        N r = parent.right;
+        N rl = r.left;
+        r.left = parent;
+        parent.right = rl;
+        return r;
+    }
+
+    public void print() {
         new Printer<>(this).print();
     }
 
-    class Printer<N extends BSTNode<N>> {
+    private static class Printer<N extends BSTNode<N>> {
 
         private final ArrayList<String> cellStrings;
         private final N top;

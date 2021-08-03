@@ -3,7 +3,7 @@ package cn.itscloudy.snippedjava.algorithm.tree;
 /**
  * This tree was invented in 1972 by Rudolf Bayer
  */
-public class RedBlackTree implements BST<RedBlackTree.RBNode> {
+public class RedBlackTree extends BST<RedBlackTree.RBNode> {
     private RBNode top;
 
     @Override
@@ -108,22 +108,6 @@ public class RedBlackTree implements BST<RedBlackTree.RBNode> {
     private void blackPAndRedGP(RBNode p, RBNode gp) {
         gp.setRed();
         p.setBlack();
-    }
-
-    private RBNode rightRotate(RBNode node) {
-        RBNode left = node.left;
-        RBNode leftRight = left.right;
-        left.right = node;
-        node.left = leftRight;
-        return left;
-    }
-
-    private RBNode leftRotate(RBNode node) {
-        RBNode right = node.right;
-        RBNode rightLeft = right.left;
-        right.left = node;
-        node.left = rightLeft;
-        return right;
     }
 
     @Override

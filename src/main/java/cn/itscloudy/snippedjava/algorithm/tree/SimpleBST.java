@@ -3,7 +3,7 @@ package cn.itscloudy.snippedjava.algorithm.tree;
 /**
  * Basic Binary Search Tree
  */
-public class SimpleBST implements BST<SimpleBST.SimpleBSTNode> {
+public class SimpleBST extends BST<SimpleBST.SimpleBSTNode> {
     protected SimpleBSTNode top;
 
     @Override
@@ -17,25 +17,7 @@ public class SimpleBST implements BST<SimpleBST.SimpleBSTNode> {
         if (top == null) {
             top = node;
         } else {
-            insert(node, top);
-        }
-    }
-
-    private <N extends BSTNode<N>> void insert(N node, N parent) {
-        if (parent.leftMightContain(node)) {
-            N left = parent.left;
-            if (left == null) {
-                parent.left = node;
-            } else {
-                insert(node, left);
-            }
-        } else {
-            N right = parent.right;
-            if (right == null) {
-                parent.right = node;
-            } else {
-                insert(node, right);
-            }
+            BST.insert(node, top);
         }
     }
 

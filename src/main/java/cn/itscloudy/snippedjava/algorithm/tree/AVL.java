@@ -3,7 +3,7 @@ package cn.itscloudy.snippedjava.algorithm.tree;
 /**
  * Self-balancing binary search tree(named after inventors Adelson-Velsky and Landis)
  */
-public class AVL implements BST<AVL.AVLNode> {
+public class AVL extends BST<AVL.AVLNode> {
 
     protected AVLNode top;
 
@@ -66,15 +66,11 @@ public class AVL implements BST<AVL.AVLNode> {
      * @param parent The node of rotation based on
      * @return The new parent
      */
-    private AVLNode rightRotate(AVLNode parent) {
-        AVLNode left = parent.left;
-        AVLNode leftRight = left.right;
-        left.right = parent;
-        parent.left = leftRight;
-
+    protected AVLNode rightRotate(AVLNode parent) {
+        AVLNode newParent = super.rightRotate(parent);
         resetHeightOf(parent);
-        resetHeightOf(left);
-        return left;
+        resetHeightOf(newParent);
+        return newParent;
     }
 
     /**
@@ -83,15 +79,11 @@ public class AVL implements BST<AVL.AVLNode> {
      * @param parent The node of rotation based on
      * @return The new parent
      */
-    private AVLNode leftRotate(AVLNode parent) {
-        AVLNode right = parent.right;
-        AVLNode rightLeft = right.left;
-        right.left = parent;
-        parent.right = rightLeft;
-
+    protected AVLNode leftRotate(AVLNode parent) {
+        AVLNode newParent = super.leftRotate(parent);
         resetHeightOf(parent);
-        resetHeightOf(right);
-        return right;
+        resetHeightOf(newParent);
+        return newParent;
     }
 
     @Override
