@@ -13,13 +13,13 @@ class SplayTreeTest {
         tree.insert(5, "5");
         tree.insert(1, "1");
 
-        SplayTree.STNode node = tree.search(1);
-        assertEquals(1, node.i);
+        SplayTree.STNode node = tree.search(5);
+        assertEquals(5, node.i);
 
         SplayTree.STNode top = tree.top();
-        assertEquals(1, top.i);
+        assertEquals(5, top.i);
         assertEquals(10, top.right.i);
-        assertEquals(5, top.right.left.i);
+        assertEquals(1, top.left.i);
 
         tree.print();
     }

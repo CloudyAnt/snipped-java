@@ -16,6 +16,7 @@ public class SplayTree extends BST<SplayTree.STNode> {
             top = node;
         } else {
             BST.insert(node, top);
+            search(i);
         }
     }
 
