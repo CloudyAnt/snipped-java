@@ -4,10 +4,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class RedBlackTreeTest {
+class RedBlackTreeTest {
 
     @Test
-    public void shouldInsert() {
+    void shouldInsert() {
         BST<?> tree = new RedBlackTree();
         tree.insert(10, "10");
         tree.insert(9, "9");

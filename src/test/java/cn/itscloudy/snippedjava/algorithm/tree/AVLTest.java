@@ -4,10 +4,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class AVLTest {
+class AVLTest {
 
     @Test
-    public void shouldRotateToRight() {
+    void shouldRotateToRight() {
         AVL avl = new AVL();
         avl.insert(10, "10");
         avl.insert(9, "9");
@@ -19,7 +19,7 @@ public class AVLTest {
     }
 
     @Test
-    public void shouldRotateToLeft() {
+    void shouldRotateToLeft() {
         AVL avl = new AVL();
         avl.insert(10, "10");
         avl.insert(11, "11");
@@ -31,7 +31,7 @@ public class AVLTest {
     }
 
     @Test
-    public void shouldDelete() {
+    void shouldDelete() {
         AVL avl = new AVL();
         avl.insert(10, "10");
         avl.insert(5, "5");
@@ -41,13 +41,15 @@ public class AVLTest {
         avl.insert(15, "15");
         avl.insert(3, "3");
 
+        avl.print();
         avl.delete(10);
+        avl.print();
+
         assertEquals(5, avl.top.i);
         assertEquals(15, avl.top.right.i);
         assertEquals(4, avl.top.left.i);
         assertEquals(3, avl.top.left.left.i);
         assertEquals(6, avl.top.right.left.i);
         assertEquals(20, avl.top.right.right.i);
-
     }
 }

@@ -1,5 +1,8 @@
 package cn.itscloudy.snippedjava.algorithm.tree;
 
+/**
+ * This tree was invented in 1972 by Rudolf Bayer
+ */
 public class RedBlackTree implements BST<RedBlackTree.RBNode> {
     private RBNode top;
 
@@ -41,17 +44,26 @@ public class RedBlackTree implements BST<RedBlackTree.RBNode> {
      */
     private RBNode insert(RBNode x, RBNode p, RBNode gp) {
         boolean pLeft = p.leftMightContain(x);
+        boolean gpLeft = gp.leftMightContain(p);
 
         // Left/Right if not null, insert to Left/Right
         if (pLeft && p.left != null) {
             p = insert(x, p.left, p);
-            blackGP(p, gp);
+            if (gpLeft) {
+                gp.left = p;
+            } else {
+                gp.right = p;
+            }
             return gp;
         }
         if (!pLeft && p.right != null) {
             p = insert(x, p.right, p);
-            blackGP(p, gp);
-            return p;
+            if (gpLeft) {
+                gp.left = p;
+            } else {
+                gp.right = p;
+            }
+            return gp;
         }
 
         if (pLeft) {
@@ -66,7 +78,6 @@ public class RedBlackTree implements BST<RedBlackTree.RBNode> {
         }
 
         // If x's uncle is also red, invert color of gp and gp's children
-        boolean gpLeft = gp.leftMightContain(p);
         if ((gpLeft && gp.rightRed()) || (!gpLeft && gp.leftRed())) {
             x.setBlack();
             return gp;
@@ -97,12 +108,6 @@ public class RedBlackTree implements BST<RedBlackTree.RBNode> {
     private void blackPAndRedGP(RBNode p, RBNode gp) {
         gp.setRed();
         p.setBlack();
-    }
-
-    private void blackGP(RBNode p, RBNode gp) {
-        if (p.red && gp.red) {
-            gp.setBlack();
-        }
     }
 
     private RBNode rightRotate(RBNode node) {
