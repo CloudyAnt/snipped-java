@@ -51,7 +51,7 @@ public enum PeriodUnit {
 
     public Period of(Calendar calendar) {
         zero(calendar);
-        return new Period(calendar, this);
+        return new Period(calendar);
     }
 
     private void zero(Calendar calendar) {
@@ -65,26 +65,23 @@ public enum PeriodUnit {
     /**
      * The interval is [startInstant, endInstant)
      */
-    public static class Period {
-        private final PeriodUnit periodUnit;
-
+    public class Period {
         private final Calendar calendar;
 
         private final Instant startInstant;
 
         private final Instant endInstant;
 
-        private Period(Calendar calendar, PeriodUnit periodUnit) {
-            this.periodUnit = periodUnit;
+        private Period(Calendar calendar) {
             this.calendar = calendar;
 
             startInstant = calendar.toInstant();
-            periodUnit.unitLaterSetter.accept(calendar);
+            unitLaterSetter.accept(calendar);
             endInstant = calendar.toInstant();
         }
 
         public PeriodUnit unit() {
-            return periodUnit;
+            return PeriodUnit.this;
         }
 
         /**
@@ -103,13 +100,13 @@ public enum PeriodUnit {
 
         public Period toPrevious() {
             Calendar previousCalendar = (Calendar) this.calendar.clone();
-            periodUnit.unitAgoSetter.accept(previousCalendar);
-            periodUnit.unitAgoSetter.accept(previousCalendar);
-            return new Period(previousCalendar, periodUnit);
+            unitAgoSetter.accept(previousCalendar);
+            unitAgoSetter.accept(previousCalendar);
+            return new Period(previousCalendar);
         }
 
         public Period toNext() {
-            return new Period((Calendar) this.calendar.clone(), periodUnit);
+            return new Period((Calendar) this.calendar.clone());
         }
     }
 }

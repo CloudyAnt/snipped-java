@@ -20,8 +20,6 @@ class SplayTreeTest {
         assertEquals(5, top.i);
         assertEquals(10, top.right.i);
         assertEquals(1, top.left.i);
-
-        tree.print();
     }
 
 }
