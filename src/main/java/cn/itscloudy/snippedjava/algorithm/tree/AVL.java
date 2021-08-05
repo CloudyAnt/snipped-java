@@ -3,7 +3,7 @@ package cn.itscloudy.snippedjava.algorithm.tree;
 /**
  * Self-balancing binary search tree(named after inventors Adelson-Velsky and Landis)
  */
-public class AVL extends BST<AVL.AVLNode> {
+public class AVL extends AbstractBST<AVL.AVLNode> {
 
     protected AVLNode top;
 
@@ -137,7 +137,7 @@ public class AVL extends BST<AVL.AVLNode> {
     /**
      * Avl tree node
      */
-    static class AVLNode extends BSTNode<AVLNode> {
+    static class AVLNode extends AbstractBSTNode<AVLNode> {
         protected int height;
 
         public AVLNode(int i, String words) {

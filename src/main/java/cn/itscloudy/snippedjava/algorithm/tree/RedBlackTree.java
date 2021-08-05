@@ -3,7 +3,7 @@ package cn.itscloudy.snippedjava.algorithm.tree;
 /**
  * This tree was invented in 1972 by Rudolf Bayer
  */
-public class RedBlackTree extends BST<RedBlackTree.RBNode> {
+public class RedBlackTree extends AbstractBST<RedBlackTree.RBNode> {
     private RBNode top;
 
     @Override
@@ -115,7 +115,7 @@ public class RedBlackTree extends BST<RedBlackTree.RBNode> {
 
     }
 
-    protected static class RBNode extends BSTNode<RBNode> {
+    protected static class RBNode extends AbstractBSTNode<RBNode> {
         boolean red;
 
         public RBNode(int i, String words) {

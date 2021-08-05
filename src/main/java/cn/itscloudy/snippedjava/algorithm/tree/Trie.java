@@ -1,6 +1,9 @@
 package cn.itscloudy.snippedjava.algorithm.tree;
 
-public class Trie {
+/**
+ * Prefix tree
+ */
+public class Trie extends AbstractTrie {
     private static final int ALPHABET_SIZE = 26;
 
     private final TrieNode top;
@@ -13,6 +16,7 @@ public class Trie {
         return top;
     }
 
+    @Override
     public void insert(String word) {
         TrieNode node = top;
         int i = 0;
@@ -22,6 +26,7 @@ public class Trie {
         node.end(word.charAt(i));
     }
 
+    @Override
     public boolean check(String word) {
         TrieNode node = top;
         int i = 0;
@@ -63,12 +68,6 @@ public class Trie {
                 children[index] = new TrieNode();
             }
             children[index].endOfWord = true;
-        }
-
-        private void assertCharValid(char c) {
-            if (c < 'a' || c > 'z') {
-                throw new RuntimeException("Invalid char: " + c);
-            }
         }
     }
 }

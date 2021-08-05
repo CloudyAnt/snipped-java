@@ -8,7 +8,7 @@ class RedBlackTreeTest {
 
     @Test
     void shouldInsert() {
-        BST<?> tree = new RedBlackTree();
+        AbstractBST<?> tree = new RedBlackTree();
         tree.insert(10, "10");
         tree.insert(9, "9");
         tree.insert(8, "8");

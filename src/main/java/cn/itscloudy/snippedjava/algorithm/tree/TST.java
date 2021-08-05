@@ -3,7 +3,7 @@ package cn.itscloudy.snippedjava.algorithm.tree;
 /**
  * Ternary Search Tree
  */
-public class TST {
+public class TST extends AbstractTrie {
 
     private TSTNode top;
     private static final char ENDING = '$';
@@ -12,6 +12,7 @@ public class TST {
         return top;
     }
 
+    @Override
     public void insert(String word) {
         if (word == null || word.length() == 0) {
             return;
@@ -48,6 +49,7 @@ public class TST {
         node.endOfWord = true;
     }
 
+    @Override
     public boolean check(String word) {
         if (word == null || word.length() == 0) {
             return false;
@@ -82,16 +84,6 @@ public class TST {
         char c = word.charAt(i);
         assertCharValid(c);
         return c;
-    }
-
-    private static int compare(char a, char b) {
-        return Integer.compare(Character.compare(a, b), 0);
-    }
-
-    private static void assertCharValid(char c) {
-        if (c < 'a' || c > 'z') {
-            throw new RuntimeException("Invalid char: " + c);
-        }
     }
 
     protected static class TSTNode {

@@ -1,6 +1,6 @@
 package cn.itscloudy.snippedjava.algorithm.tree;
 
-public class SplayTree extends BST<SplayTree.STNode> {
+public class SplayTree extends AbstractBST<SplayTree.STNode> {
 
     private STNode top;
 
@@ -15,7 +15,7 @@ public class SplayTree extends BST<SplayTree.STNode> {
         if (top == null) {
             top = node;
         } else {
-            BST.insert(node, top);
+            AbstractBST.insert(node, top);
             search(i);
         }
     }
@@ -77,7 +77,7 @@ public class SplayTree extends BST<SplayTree.STNode> {
         return null;
     }
 
-    protected static class STNode extends BSTNode<STNode> {
+    protected static class STNode extends AbstractBSTNode<STNode> {
         public STNode(int i, String words) {
             super(i, words);
         }
