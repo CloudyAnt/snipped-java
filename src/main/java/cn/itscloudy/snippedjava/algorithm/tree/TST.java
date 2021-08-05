@@ -6,6 +6,7 @@ package cn.itscloudy.snippedjava.algorithm.tree;
 public class TST {
 
     private TSTNode top;
+    private static final char ENDING = '$';
 
     public TSTNode top() {
         return top;
@@ -20,38 +21,28 @@ public class TST {
         }
 
         TSTNode node = top;
-        int status = -2;
-        char c = word.charAt(0);
-        assertCharValid(c);
+        char c = charAt(word, 0);
         for (int i = 0; ; ) {
-            switch (status) {
-                case 1:
-                    if (node.right == null) {
-                        node.right = new TSTNode(c);
-                    }
-                    node = node.right;
+            int diff = Character.compare(c, node.c);
+            if (diff == 0) {
+                if ((c = charAt(word, ++i)) == ENDING) {
                     break;
-                case -1:
-                    if (node.left == null) {
-                        node.left = new TSTNode(c);
-                    }
-                    node = node.left;
-                    break;
-                case 0:
+                } else {
                     if (node.equal == null) {
                         node.equal = new TSTNode(c);
                     }
                     node = node.equal;
-                    break;
-            }
-            status = compare(c, node.c);
-            if (status == 0) {
-                i++;
-                if (i < word.length()) {
-                    c = charAt(word, i);
-                } else {
-                    break;
                 }
+            } else if (diff < 0) {
+                if (node.left == null) {
+                    node.left = new TSTNode(c);
+                }
+                node = node.left;
+            } else {
+                if (node.right == null) {
+                    node.right = new TSTNode(c);
+                }
+                node = node.right;
             }
         }
         node.endOfWord = true;
@@ -63,40 +54,32 @@ public class TST {
         }
 
         TSTNode node = top;
-        int status = -2;
-        char c = word.charAt(0);
-        assertCharValid(c);
+        char c = charAt(word, 0);
         for (int i = 0; ; ) {
-            switch (status) {
-                case 1:
-                    node = node.right;
-                    break;
-                case -1:
-                    node = node.left;
-                    break;
-                case 0:
-                    node = node.equal;
-                    break;
-            }
             if (node == null) {
                 return false;
             }
-            status = compare(c, node.c);
-            if (status == 0) {
-                i++;
-                if (i < word.length()) {
-                    c = charAt(word, i);
-                } else {
+            int diff = Character.compare(c, node.c);
+            if (diff == 0) {
+                if ((c = charAt(word, ++i)) == ENDING) {
                     break;
+                } else {
+                    node = node.equal;
                 }
+            } else if (diff < 0) {
+                node = node.left;
+            } else {
+                node = node.right;
             }
         }
         return node.endOfWord;
     }
 
     private char charAt(String word, int i) {
-        char c;
-        c = word.charAt(i);
+        if (i >= word.length()) {
+            return ENDING;
+        }
+        char c = word.charAt(i);
         assertCharValid(c);
         return c;
     }
