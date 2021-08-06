@@ -1,4 +1,4 @@
-package cn.itscloudy.snippedjava.algorithm.tree;
+package cn.itscloudy.snippedjava.algorithm.bst;
 
 /**
  * Self-balancing binary search tree(named after inventors Adelson-Velsky and Landis)

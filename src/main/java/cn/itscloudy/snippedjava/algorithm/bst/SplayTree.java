@@ -1,4 +1,4 @@
-package cn.itscloudy.snippedjava.algorithm.tree;
+package cn.itscloudy.snippedjava.algorithm.bst;
 
 public class SplayTree extends AbstractBST<SplayTree.STNode> {
 

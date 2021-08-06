@@ -9,7 +9,7 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
-class SortingAlgorithmTest {
+class SortingTest {
 
     private final Random random = new Random();
     private final int[] longArray;
@@ -21,8 +21,8 @@ class SortingAlgorithmTest {
     }
 
     @ParameterizedTest(name = "sort by algorithm ${0}")
-    @EnumSource(SortingAlgorithm.class)
-    void shouldSort(SortingAlgorithm algorithm) {
+    @EnumSource(Sorting.class)
+    void shouldSort(Sorting algorithm) {
         if (algorithm.notReady()) {
             return;
         }
@@ -37,14 +37,14 @@ class SortingAlgorithmTest {
         test(algorithm, Arrays.copyOf(shuffledLongArray, shuffledLongArray.length), longArray);
     }
 
-    private void test(SortingAlgorithm algorithm, int[] arrayToSort, int[] expectedResultValue) {
+    private void test(Sorting algorithm, int[] arrayToSort, int[] expectedResultValue) {
         OptionalResult<int[]> result = OptionalResult.of(() -> algorithm.sort(arrayToSort), true);
         int[] resultValue = result.orElseThrow(RuntimeException::new);
         assertArrayEquals(expectedResultValue, resultValue);
         printResult(algorithm, result);
     }
 
-    private void printResult(SortingAlgorithm algorithm, OptionalResult<int[]> result) {
+    private void printResult(Sorting algorithm, OptionalResult<int[]> result) {
         System.out.println(algorithm.name() + " > " + result.mills() + "ms");
     }
 

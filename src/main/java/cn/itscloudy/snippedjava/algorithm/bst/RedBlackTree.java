@@ -1,4 +1,4 @@
-package cn.itscloudy.snippedjava.algorithm.tree;
+package cn.itscloudy.snippedjava.algorithm.bst;
 
 /**
  * This tree was invented in 1972 by Rudolf Bayer

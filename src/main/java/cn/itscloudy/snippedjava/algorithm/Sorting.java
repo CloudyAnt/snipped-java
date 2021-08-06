@@ -3,22 +3,22 @@ package cn.itscloudy.snippedjava.algorithm;
 import java.util.Arrays;
 import java.util.function.UnaryOperator;
 
-public enum SortingAlgorithm {
-    SELECTION(SortingAlgorithm::selection),
-    BUBBLE(SortingAlgorithm::bubble),
-    INSERTION(SortingAlgorithm::insertion),
-    QS(SortingAlgorithm::qs), // quick sort
-    HEAP(SortingAlgorithm::heap),
-    MERGE(SortingAlgorithm::merge),
-    SHELL(SortingAlgorithm::shell),
-    RADIX(SortingAlgorithm::radix),
-    BUCKET(SortingAlgorithm::bucket),
-    COUNTING(SortingAlgorithm::counting),
+public enum Sorting {
+    SELECTION(Sorting::selection),
+    BUBBLE(Sorting::bubble),
+    INSERTION(Sorting::insertion),
+    QS(Sorting::qs), // quick sort
+    HEAP(Sorting::heap),
+    MERGE(Sorting::merge),
+    SHELL(Sorting::shell),
+    RADIX(Sorting::radix),
+    BUCKET(Sorting::bucket),
+    COUNTING(Sorting::counting),
     ;
 
     private final UnaryOperator<int[]> algorithm;
 
-    SortingAlgorithm(UnaryOperator<int[]> algorithm) {
+    Sorting(UnaryOperator<int[]> algorithm) {
         this.algorithm = algorithm;
     }
 

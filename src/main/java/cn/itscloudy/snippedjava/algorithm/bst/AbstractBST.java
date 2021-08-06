@@ -1,4 +1,4 @@
-package cn.itscloudy.snippedjava.algorithm.tree;
+package cn.itscloudy.snippedjava.algorithm.bst;
 
 import java.util.ArrayList;
 import java.util.List;
