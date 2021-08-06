@@ -36,7 +36,9 @@ class RadixTreeTest {
         assertNotNull(node);
         assertEquals(endOfWord, node.endOfWord);
 
-        if (extraChars != null) {
+        if (extraChars == null) {
+            assertEquals(0, node.extraChars.length);
+        } else {
             assertArrayEquals(node.extraChars, extraChars);
         }
         if (existentChildren.length > 0) {
@@ -63,14 +65,20 @@ class RadixTreeTest {
 
         tree.insert("hey");
         assertTrue(tree.check("hey"));
+        assertFalse(tree.check("hi"));
+        assertFalse(tree.check("he"));
+        assertFalse(tree.check("hello"));
 
         tree.insert("hi");
         assertTrue(tree.check("hey"));
         assertTrue(tree.check("hi"));
+        assertFalse(tree.check("he"));
+        assertFalse(tree.check("hello"));
 
         tree.insert("he");
         assertTrue(tree.check("hey"));
         assertTrue(tree.check("hi"));
         assertTrue(tree.check("he"));
+        assertFalse(tree.check("hello"));
     }
 }
