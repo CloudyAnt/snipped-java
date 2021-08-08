@@ -44,6 +44,10 @@ public class BTree {
         }
     }
 
+    public Value search(int i) {
+        return top.search(i);
+    }
+
     protected class BTreeNode {
         protected final Value[] values = new Value[maxDegree];
         protected final BTreeNode[] children = new BTreeNode[maxDegree + 1];
@@ -177,6 +181,22 @@ public class BTree {
 
         private boolean needSplit() {
             return values[tmpValueIndex] != null;
+        }
+
+        public Value search(int i) {
+            int index = 0;
+            for (; index < values.length; index++) {
+                if (values[index] == null || values[index].i > i) {
+                    break;
+                }
+                if (values[index].i == i) {
+                    return values[index];
+                }
+            }
+            if (children[index] == null) {
+                return null;
+            }
+            return children[index].search(i);
         }
     }
 

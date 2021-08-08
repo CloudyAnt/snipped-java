@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class BTreeTest {
 
     @Test
-    void shouldInsertToTreeWithDegree3() {
+    void shouldInsertTo3DegreeTree() {
         BTree tree = new BTree(3);
 
         tree.insert(100, "100");
@@ -51,5 +51,22 @@ class BTreeTest {
                 assertNull(node.children[i]);
             }
         }
+    }
+
+    @Test
+    void shouldSearch3DegreeTree() {
+        BTree tree = new BTree(3);
+
+        tree.insert(100, "100");
+        tree.insert(50, "50");
+        tree.insert(200, "200");
+        tree.insert(900, "900");
+        tree.insert(500, "500");
+
+        assertEquals("100", tree.search(100).words);
+        assertEquals("50", tree.search(50).words);
+        assertEquals("200", tree.search(200).words);
+        assertEquals("900", tree.search(900).words);
+        assertEquals("500", tree.search(500).words);
     }
 }
