@@ -3,17 +3,17 @@ package cn.itscloudy.snippedjava.algorithm.bst;
 /**
  * Basic Binary Search Tree
  */
-public class BST extends AbstractBST<BST.SimpleBSTNode> {
-    protected SimpleBSTNode top;
+public class BST extends AbstractBST<BST.Node> {
+    protected Node top;
 
     @Override
-    public SimpleBSTNode top() {
+    public Node top() {
         return top;
     }
 
     @Override
     public void insert(int i, String words) {
-        SimpleBSTNode node = new SimpleBSTNode(i, words);
+        Node node = new Node(i, words);
         if (top == null) {
             top = node;
         } else {
@@ -26,8 +26,8 @@ public class BST extends AbstractBST<BST.SimpleBSTNode> {
 
     }
 
-    static class SimpleBSTNode extends AbstractBSTNode<SimpleBSTNode> {
-        public SimpleBSTNode(int i, String words) {
+    static class Node extends AbstractBSTNode<Node> {
+        public Node(int i, String words) {
             super(i, words);
         }
     }

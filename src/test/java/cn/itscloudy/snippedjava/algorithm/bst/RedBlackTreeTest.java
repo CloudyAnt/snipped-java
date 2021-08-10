@@ -15,7 +15,7 @@ class RedBlackTreeTest {
         tree.insert(7, "7");
         tree.insert(6, "6");
 
-        RedBlackTree.RBNode top = (RedBlackTree.RBNode) tree.top();
+        RedBlackTree.Node top = (RedBlackTree.Node) tree.top();
         assertNode(top, 9, false);
         assertNode(top.left, 8, true);
         assertNode(top.right, 10, true);
@@ -23,7 +23,7 @@ class RedBlackTreeTest {
         assertNode(top.left.left.left, 6, true);
     }
 
-    private void assertNode(RedBlackTree.RBNode node, int i, boolean red) {
+    private void assertNode(RedBlackTree.Node node, int i, boolean red) {
         assertEquals(i, node.i);
         assertEquals(red, node.red);
     }

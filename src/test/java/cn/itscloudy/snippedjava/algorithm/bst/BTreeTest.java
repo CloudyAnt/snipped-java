@@ -34,7 +34,7 @@ class BTreeTest {
         assertChildrenExistence(tree.top.children[1], 0, 0, 0);
     }
 
-    private void assertValues(BTree.BTreeNode node, Integer... values) {
+    private void assertValues(BTree.Node node, Integer... values) {
         for (int i = 0; i < values.length; i++) {
             if (values[i] == null) {
                 continue;
@@ -43,7 +43,7 @@ class BTreeTest {
         }
     }
 
-    private void assertChildrenExistence(BTree.BTreeNode node, int... existences) {
+    private void assertChildrenExistence(BTree.Node node, int... existences) {
         for (int i = 0; i < existences.length; i++) {
             if (existences[i] == 1) {
                 assertNotNull(node.children[i]);
@@ -69,4 +69,25 @@ class BTreeTest {
         assertEquals("900", tree.search(900).words);
         assertEquals("500", tree.search(500).words);
     }
+
+    @Test
+    void shouldInsertTo4DegreeTree() {
+        BTree tree = new BTree(4);
+
+        tree.insert(100, "100");
+        tree.insert(50, "50");
+        tree.insert(200, "200");
+
+        assertValues(tree.top, 50, 100, 200);
+        assertChildrenExistence(tree.top, 0, 0, 0);
+
+        tree.insert(300, "300");
+        assertValues(tree.top, 100, null, null);
+        assertChildrenExistence(tree.top, 1, 1, 0);
+        assertValues(tree.top.children[0], 50, null, null);
+        assertChildrenExistence(tree.top.children[0], 0, 0, 0);
+        assertValues(tree.top.children[1], 200, 300, null);
+        assertChildrenExistence(tree.top.children[1], 0, 0, 0);
+    }
+
 }

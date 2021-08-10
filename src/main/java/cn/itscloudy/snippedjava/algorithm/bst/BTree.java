@@ -11,32 +11,32 @@ public class BTree {
     private final int overflowIndex;
     private final int splitMiddle;
 
-    public BTreeNode top;
+    public Node top;
 
     public BTree(int maxDegree) {
         this.maxDegree = maxDegree;
         maxValueIndex = maxDegree - 2;
-        tmpValueIndex = maxDegree - 1;
+        tmpValueIndex = maxValueIndex + 1;
         maxChildIndex = maxDegree - 1;
-        tmpChildIndex = maxDegree;
-        overflowIndex = (maxDegree - 1) / 2;
+        tmpChildIndex = maxChildIndex + 1;
+        overflowIndex = tmpValueIndex / 2;
         splitMiddle = overflowIndex + 1;
     }
 
-    public BTreeNode top() {
+    public Node top() {
         return top;
     }
 
     public void insert(int i, String words) {
         if (top == null) {
-            top = new BTreeNode(i, words);
+            top = new Node(i, words);
         } else {
             top.insert(new Value(i, words));
             if (top.needSplit()) {
                 Value newTopValue = top.pourOverflow();
-                BTreeNode newNode = top.split();
+                Node newNode = top.split();
 
-                BTreeNode newTop = new BTreeNode(newTopValue);
+                Node newTop = new Node(newTopValue);
                 newTop.children[0] = top;
                 newTop.children[1] = newNode;
                 top = newTop;
@@ -45,18 +45,21 @@ public class BTree {
     }
 
     public Value search(int i) {
+        if (top == null) {
+            return null;
+        }
         return top.search(i);
     }
 
-    protected class BTreeNode {
+    protected class Node {
         protected final Value[] values = new Value[maxDegree];
-        protected final BTreeNode[] children = new BTreeNode[maxDegree + 1];
+        protected final Node[] children = new Node[maxDegree + 1];
 
-        private BTreeNode(int i, String words) {
+        private Node(int i, String words) {
             values[0] = new Value(i, words);
         }
 
-        private BTreeNode(Value value) {
+        private Node(Value value) {
             values[0] = value;
         }
 
@@ -68,7 +71,7 @@ public class BTree {
 
             // get child branch
             int i = 0;
-            BTreeNode child = children[0];
+            Node child = children[0];
             for (; i < maxChildIndex; i++) {
                 if (values[i] == null || v.i < values[i].i) {
                     child = children[i];
@@ -80,7 +83,7 @@ public class BTree {
             if (child.needSplit()) {
                 // pour overflow
                 v = child.pourOverflow();
-                BTreeNode newChild = child.split();
+                Node newChild = child.split();
 
                 int j = i;
                 Value tmpValue = v;
@@ -92,9 +95,9 @@ public class BTree {
                 }
 
                 j = i + 1;
-                BTreeNode tmpNode = newChild;
+                Node tmpNode = newChild;
                 while (j < tmpChildIndex) {
-                    BTreeNode tmp1 = children[j];
+                    Node tmp1 = children[j];
                     children[j] = tmpNode;
                     tmpNode = tmp1;
                     j++;
@@ -149,10 +152,10 @@ public class BTree {
          *
          * @return new node
          */
-        private BTreeNode split() {
-            BTreeNode right = new BTreeNode(values[splitMiddle]);
+        private Node split() {
+            Node right = new Node(values[splitMiddle]);
             values[splitMiddle] = null;
-            for (int vi = maxValueIndex, rvi = 1; vi > splitMiddle; vi--, rvi++) {
+            for (int vi = splitMiddle + 1, rvi = 1; vi <= tmpValueIndex; vi++, rvi++) {
                 right.values[rvi] = values[vi];
                 right.children[rvi] = children[vi];
                 values[vi] = null;

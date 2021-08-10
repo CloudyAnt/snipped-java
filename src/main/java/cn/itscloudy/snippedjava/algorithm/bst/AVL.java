@@ -3,18 +3,18 @@ package cn.itscloudy.snippedjava.algorithm.bst;
 /**
  * Self-balancing binary search tree(named after inventors Adelson-Velsky and Landis)
  */
-public class AVL extends AbstractBST<AVL.AVLNode> {
+public class AVL extends AbstractBST<AVL.Node> {
 
-    protected AVLNode top;
+    protected Node top;
 
     @Override
-    public AVLNode top() {
+    public Node top() {
         return top;
     }
 
     @Override
     public void insert(int i, String words) {
-        AVLNode node = new AVLNode(i, words);
+        Node node = new Node(i, words);
         if (this.top == null) {
             this.top = node;
         } else {
@@ -22,7 +22,7 @@ public class AVL extends AbstractBST<AVL.AVLNode> {
         }
     }
 
-    private AVLNode insert(AVLNode node, AVLNode parent) {
+    private Node insert(Node node, Node parent) {
         if (parent.leftMightContain(node)) {
             if (parent.left == null) {
                 parent.left = node;
@@ -41,13 +41,13 @@ public class AVL extends AbstractBST<AVL.AVLNode> {
         return balance(parent);
     }
 
-    protected void resetHeightOf(AVLNode parent) {
+    protected void resetHeightOf(Node parent) {
         int leftHeight = parent.left == null ? 0 : parent.left.height;
         int rightHeight = parent.right == null ? 0 : parent.right.height;
         parent.height = Math.max(leftHeight, rightHeight) + 1;
     }
 
-    private AVLNode balance(AVLNode parent) {
+    private Node balance(Node parent) {
         int leftHeight = parent.left == null ? 0 : parent.left.height;
         int rightHeight = parent.right == null ? 0 : parent.right.height;
 
@@ -66,8 +66,8 @@ public class AVL extends AbstractBST<AVL.AVLNode> {
      * @param parent The node of rotation based on
      * @return The new parent
      */
-    protected AVLNode rightRotate(AVLNode parent) {
-        AVLNode newParent = super.rightRotate(parent);
+    protected Node rightRotate(Node parent) {
+        Node newParent = super.rightRotate(parent);
         resetHeightOf(parent);
         resetHeightOf(newParent);
         return newParent;
@@ -79,8 +79,8 @@ public class AVL extends AbstractBST<AVL.AVLNode> {
      * @param parent The node of rotation based on
      * @return The new parent
      */
-    protected AVLNode leftRotate(AVLNode parent) {
-        AVLNode newParent = super.leftRotate(parent);
+    protected Node leftRotate(Node parent) {
+        Node newParent = super.leftRotate(parent);
         resetHeightOf(parent);
         resetHeightOf(newParent);
         return newParent;
@@ -95,7 +95,7 @@ public class AVL extends AbstractBST<AVL.AVLNode> {
                 top = leftRotate(top);
             }
         }
-        AVLNode orphan = deleteAndGetOrphan(i, top);
+        Node orphan = deleteAndGetOrphan(i, top);
         if (orphan != null) {
             insert(orphan, top);
         }
@@ -106,9 +106,9 @@ public class AVL extends AbstractBST<AVL.AVLNode> {
      *
      * @return Orphan
      */
-    private AVLNode deleteAndGetOrphan(int i, AVLNode parent) {
+    private Node deleteAndGetOrphan(int i, Node parent) {
         if (parent.leftMightContain(i)) {
-            AVLNode left = parent.left;
+            Node left = parent.left;
             if (left == null) {
                 return null;
             }
@@ -120,7 +120,7 @@ public class AVL extends AbstractBST<AVL.AVLNode> {
                 return deleteAndGetOrphan(i, parent.left);
             }
         } else {
-            AVLNode right = parent.right;
+            Node right = parent.right;
             if (right == null) {
                 return null;
             }
@@ -137,10 +137,10 @@ public class AVL extends AbstractBST<AVL.AVLNode> {
     /**
      * Avl tree node
      */
-    static class AVLNode extends AbstractBSTNode<AVLNode> {
+    static class Node extends AbstractBSTNode<Node> {
         protected int height;
 
-        public AVLNode(int i, String words) {
+        public Node(int i, String words) {
             super(i, words);
             this.height = 1;
         }

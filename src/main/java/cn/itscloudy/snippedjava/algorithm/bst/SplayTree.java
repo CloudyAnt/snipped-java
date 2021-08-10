@@ -1,17 +1,17 @@
 package cn.itscloudy.snippedjava.algorithm.bst;
 
-public class SplayTree extends AbstractBST<SplayTree.STNode> {
+public class SplayTree extends AbstractBST<SplayTree.Node> {
 
-    private STNode top;
+    private Node top;
 
     @Override
-    public STNode top() {
+    public Node top() {
         return top;
     }
 
     @Override
     public void insert(int i, String words) {
-        STNode node = new STNode(i, words);
+        Node node = new Node(i, words);
         if (top == null) {
             top = node;
         } else {
@@ -26,25 +26,25 @@ public class SplayTree extends AbstractBST<SplayTree.STNode> {
     }
 
     @Override
-    public STNode search(int i) {
+    public Node search(int i) {
         if (top == null || i == top.i) {
             return top;
         }
-        STNode node = search(i, this.top);
+        Node node = search(i, this.top);
         if (node != null) {
             top = node;
         }
         return node;
     }
 
-    private STNode search(int i, STNode p) {
+    private Node search(int i, Node p) {
         if (p.leftMightContain(i)) {
             return searchLeft(i, p);
         }
         return searchRight(i, p);
     }
 
-    private STNode searchLeft(int i, STNode p) {
+    private Node searchLeft(int i, Node p) {
         if (p.left == null) {
             return null;
         }
@@ -52,7 +52,7 @@ public class SplayTree extends AbstractBST<SplayTree.STNode> {
             return rightRotate(p);
         }
 
-        STNode node = search(i, p.left);
+        Node node = search(i, p.left);
         if (node != null) {
             p.left = node;
             return rightRotate(p);
@@ -60,7 +60,7 @@ public class SplayTree extends AbstractBST<SplayTree.STNode> {
         return null;
     }
 
-    private STNode searchRight(int i, STNode p) {
+    private Node searchRight(int i, Node p) {
         if (p.right == null) {
             return null;
         }
@@ -69,7 +69,7 @@ public class SplayTree extends AbstractBST<SplayTree.STNode> {
             return leftRotate(p);
         }
 
-        STNode node = search(i, p.right);
+        Node node = search(i, p.right);
         if (node != null) {
             p.right = node;
             return leftRotate(p);
@@ -77,8 +77,8 @@ public class SplayTree extends AbstractBST<SplayTree.STNode> {
         return null;
     }
 
-    protected static class STNode extends AbstractBSTNode<STNode> {
-        public STNode(int i, String words) {
+    protected static class Node extends AbstractBSTNode<Node> {
+        public Node(int i, String words) {
             super(i, words);
         }
     }

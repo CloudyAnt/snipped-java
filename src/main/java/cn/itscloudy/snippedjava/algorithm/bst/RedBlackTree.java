@@ -3,17 +3,17 @@ package cn.itscloudy.snippedjava.algorithm.bst;
 /**
  * This tree was invented in 1972 by Rudolf Bayer
  */
-public class RedBlackTree extends AbstractBST<RedBlackTree.RBNode> {
-    private RBNode top;
+public class RedBlackTree extends AbstractBST<RedBlackTree.Node> {
+    private Node top;
 
     @Override
-    public RBNode top() {
+    public Node top() {
         return top;
     }
 
     @Override
     public void insert(int i, String words) {
-        RBNode node = new RBNode(i, words);
+        Node node = new Node(i, words);
         if (top == null) {
             this.top = node;
             top.red = false;
@@ -42,7 +42,7 @@ public class RedBlackTree extends AbstractBST<RedBlackTree.RBNode> {
      * @param gp The grandparent node
      * @return The grandparent node
      */
-    private RBNode insert(RBNode x, RBNode p, RBNode gp) {
+    private Node insert(Node x, Node p, Node gp) {
         boolean pLeft = p.leftMightContain(x);
         boolean gpLeft = gp.leftMightContain(p);
 
@@ -105,7 +105,7 @@ public class RedBlackTree extends AbstractBST<RedBlackTree.RBNode> {
         }
     }
 
-    private void blackPAndRedGP(RBNode p, RBNode gp) {
+    private void blackPAndRedGP(Node p, Node gp) {
         gp.setRed();
         p.setBlack();
     }
@@ -115,10 +115,10 @@ public class RedBlackTree extends AbstractBST<RedBlackTree.RBNode> {
 
     }
 
-    protected static class RBNode extends AbstractBSTNode<RBNode> {
+    protected static class Node extends AbstractBSTNode<Node> {
         boolean red;
 
-        public RBNode(int i, String words) {
+        public Node(int i, String words) {
             super(i, words);
             this.red = true;
         }
