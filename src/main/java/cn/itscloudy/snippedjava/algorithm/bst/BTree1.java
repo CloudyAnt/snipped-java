@@ -2,7 +2,7 @@ package cn.itscloudy.snippedjava.algorithm.bst;
 
 import lombok.AllArgsConstructor;
 
-public class BTree {
+public class BTree1 {
     private final int maxDegree;
     private final int maxValueIndex;
     private final int tmpValueIndex;
@@ -13,7 +13,11 @@ public class BTree {
 
     public Node top;
 
-    public BTree(int maxDegree) {
+    public BTree1(int maxDegree) {
+        if (maxDegree < 3) {
+            throw new RuntimeException("MaxDegree can't be less than 3");
+        }
+
         this.maxDegree = maxDegree;
         maxValueIndex = maxDegree - 2;
         tmpValueIndex = maxValueIndex + 1;
@@ -31,15 +35,12 @@ public class BTree {
         if (top == null) {
             top = new Node(i, words);
         } else {
-            top.insert(new Value(i, words));
-            if (top.needSplit()) {
-                Value newTopValue = top.pourOverflow();
-                Node newNode = top.split();
-
-                Node newTop = new Node(newTopValue);
+            Overflow overflow = top.insert(new Value(i, words));
+            if (overflow != null) {
+                Node newTop = new Node(overflow.value);
                 newTop.children[0] = top;
-                newTop.children[1] = newNode;
-                top = newTop;
+                newTop.children[1] = overflow.newNode;
+                this.top = newTop;
             }
         }
     }
@@ -52,8 +53,8 @@ public class BTree {
     }
 
     protected class Node {
-        protected final Value[] values = new Value[maxDegree];
-        protected final Node[] children = new Node[maxDegree + 1];
+        protected final Value[] values = new Value[maxValueIndex];
+        protected final Node[] children = new Node[maxChildIndex];
 
         private Node(int i, String words) {
             values[0] = new Value(i, words);
@@ -63,10 +64,12 @@ public class BTree {
             values[0] = value;
         }
 
-        private void insert(Value v) {
+        private Overflow insert(Value v) {
             if (children[0] == null) {
+                if (values[maxValueIndex] != null) {
+                    return overflow(v);
+                }
                 insertToLeaf(v);
-                return;
             }
 
             // get child branch
@@ -79,15 +82,11 @@ public class BTree {
                 }
             }
             // insert into child branch
-            child.insert(v);
-            if (child.needSplit()) {
-                // pour overflow
-                v = child.pourOverflow();
-                Node newChild = child.split();
-
+            Overflow overflow = child.insert(v);
+            if (overflow != null) {
                 int j = i;
-                Value tmpValue = v;
-                while (j < tmpValueIndex) {
+                Value tmpValue = overflow.value;
+                while (j < maxValueIndex) {
                     Value tmp1 = values[j];
                     values[j] = tmpValue;
                     tmpValue = tmp1;
@@ -95,7 +94,7 @@ public class BTree {
                 }
 
                 j = i + 1;
-                Node tmpNode = newChild;
+                Node tmpNode = overflow.newNode;
                 while (j < tmpChildIndex) {
                     Node tmp1 = children[j];
                     children[j] = tmpNode;
@@ -103,6 +102,38 @@ public class BTree {
                     j++;
                 }
             }
+            return null;
+        }
+
+        private Overflow overflow(Value v) {
+            int i = 0;
+            for (; i < values.length; i++) {
+                if (values[i] == null) {
+                    break;
+                }
+            }
+            if (i == splitMiddle) {
+                return new Overflow(v, split());
+            }
+            if (i < splitMiddle) {
+                Value ov = values[splitMiddle - 1];
+                if (splitMiddle - 1 - i >= 0) {
+                    System.arraycopy(values, i, values, i + 1, splitMiddle - 1 - i);
+                }
+                values[i] = v;
+                return new Overflow(ov, split());
+            }
+            Value ov = values[splitMiddle + 1];
+            if (i - splitMiddle - 1 >= 0) {
+                System.arraycopy(values, splitMiddle + 2, values,
+                        splitMiddle + 1, i - splitMiddle - 1);
+            }
+            values[i] = v;
+            return new Overflow(ov, split());
+        }
+
+        private Overflow accept(Overflow overflow) {
+            return null;
         }
 
         /**
@@ -111,13 +142,6 @@ public class BTree {
          * @param nv New value
          */
         private void insertToLeaf(Value nv) {
-            if (values[maxValueIndex] != null) {
-                // overflow
-                this.values[tmpValueIndex] = nv;
-                sortLeafValues();
-                return;
-            }
-
             int i = 0;
             for (; i <= tmpValueIndex; i++) {
                 // finding the right index of nv
@@ -209,9 +233,11 @@ public class BTree {
         protected final String words;
     }
 
-    private static class Overflow<T> {
-        private T value;
-        private Node newNode;
+    @AllArgsConstructor
+    private static class Overflow {
+        private final Value value;
+        private final Node newNode;
+
     }
 
 }

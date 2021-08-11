@@ -6,15 +6,19 @@ import lombok.AllArgsConstructor;
  * B+ Tree
  */
 public class BPlusTree {
-    private final int indexArraySize;
+    private final int childrenArraySize;
+    private final int maxChildIndex;
     private final int valueArraySize;
+    private final int maxValueIndex;
     private final int nextLeafIndex;
 
     private Node top;
 
     public BPlusTree(int maxDegree) {
-        indexArraySize = maxDegree;
+        childrenArraySize = maxDegree;
+        maxChildIndex = childrenArraySize - 1;
         valueArraySize = maxDegree + 1;
+        maxValueIndex = valueArraySize - 2;
         nextLeafIndex = valueArraySize - 1;
     }
 
@@ -38,24 +42,59 @@ public class BPlusTree {
         protected abstract void insert(Value value);
 
         protected abstract Value search(int i);
+
+        protected abstract boolean needSplit();
+
+        protected abstract Node split();
+
+        protected abstract Value pourOverflow();
     }
 
     private class IndexNode extends Node {
         protected final Node[] children;
-        protected final int[] is;
+        protected final Integer[] keys;
 
         public IndexNode() {
-            this.children = new Node[indexArraySize];
-            this.is = new int[indexArraySize + 1];
+            this.children = new Node[childrenArraySize];
+            this.keys = new Integer[childrenArraySize + 1];
         }
 
         @Override
-        protected void insert(Value value) {
+        protected void insert(Value v) {
+            // get child branch
+            int i = 0;
+            Node child = children[0];
+            for (; i < maxChildIndex; i++) {
+                if (keys[i] == null || v.i < keys[i]) {
+                    child = children[i];
+                    break;
+                }
+            }
 
+            // insert into child
+            child.insert(v);
+            if (child.needSplit()) {
+                Node split = child.split();
+            }
         }
 
         @Override
         protected Value search(int i) {
+            return null;
+        }
+
+        @Override
+        protected boolean needSplit() {
+            return false;
+        }
+
+        @Override
+        protected Node split() {
+            return null;
+        }
+
+        @Override
+        protected Value pourOverflow() {
             return null;
         }
     }
@@ -75,6 +114,21 @@ public class BPlusTree {
 
         @Override
         protected Value search(int i) {
+            return null;
+        }
+
+        @Override
+        protected boolean needSplit() {
+            return false;
+        }
+
+        @Override
+        protected Node split() {
+            return null;
+        }
+
+        @Override
+        protected Value pourOverflow() {
             return null;
         }
     }
