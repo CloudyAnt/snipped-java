@@ -8,10 +8,13 @@ class BTreeTest {
 
     @Test
     void shouldInsertTo3DegreeTree() {
-        BTree tree = new BTree(3);
+        BTree1 tree = new BTree1(3);
 
         tree.insert(100, "100");
         tree.insert(50, "50");
+        assertValues(tree.top, 50, 100, null);
+        assertChildrenExistence(tree.top, 0, 0, 0);
+
         tree.insert(200, "200");
 
         assertValues(tree.top, 100, null, null);
@@ -32,9 +35,27 @@ class BTreeTest {
         assertChildrenExistence(tree.top.children[1], 0, 0, 0);
         assertValues(tree.top.children[2], 900, null, null);
         assertChildrenExistence(tree.top.children[1], 0, 0, 0);
+
+        tree.insert(400, "400");
+        tree.insert(300, "300");
+
+        assertValues(tree.top, 300, null, null);
+        assertChildrenExistence(tree.top, 1, 1, 0);
+        assertValues(tree.top.children[0], 100, null, null);
+        assertChildrenExistence(tree.top.children[0], 1, 1, 0);
+        assertValues(tree.top.children[1], 500, null, null);
+        assertChildrenExistence(tree.top.children[1], 1, 1, 0);
+        assertValues(tree.top.children[0].children[0], 50, null, null);
+        assertChildrenExistence(tree.top.children[0].children[0], 0, 0, 0);
+        assertValues(tree.top.children[0].children[1], 200, null, null);
+        assertChildrenExistence(tree.top.children[0].children[1], 0, 0, 0);
+        assertValues(tree.top.children[1].children[0], 400, null, null);
+        assertChildrenExistence(tree.top.children[1].children[0], 0, 0, 0);
+        assertValues(tree.top.children[1].children[1], 900, null, null);
+        assertChildrenExistence(tree.top.children[1].children[1], 0, 0, 0);
     }
 
-    private void assertValues(BTree.Node node, Integer... values) {
+    private void assertValues(BTree1.Node node, Integer... values) {
         for (int i = 0; i < values.length; i++) {
             if (values[i] == null) {
                 continue;
@@ -43,9 +64,9 @@ class BTreeTest {
         }
     }
 
-    private void assertChildrenExistence(BTree.Node node, int... existences) {
-        for (int i = 0; i < existences.length; i++) {
-            if (existences[i] == 1) {
+    private void assertChildrenExistence(BTree1.Node node, int... childExistence) {
+        for (int i = 0; i < childExistence.length; i++) {
+            if (childExistence[i] == 1) {
                 assertNotNull(node.children[i]);
             } else {
                 assertNull(node.children[i]);
@@ -55,7 +76,7 @@ class BTreeTest {
 
     @Test
     void shouldSearch3DegreeTree() {
-        BTree tree = new BTree(3);
+        BTree1 tree = new BTree1(3);
 
         tree.insert(100, "100");
         tree.insert(50, "50");
@@ -72,7 +93,7 @@ class BTreeTest {
 
     @Test
     void shouldInsertTo4DegreeTree() {
-        BTree tree = new BTree(4);
+        BTree1 tree = new BTree1(4);
 
         tree.insert(100, "100");
         tree.insert(50, "50");
