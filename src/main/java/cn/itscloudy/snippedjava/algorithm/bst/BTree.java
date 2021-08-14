@@ -3,24 +3,20 @@ package cn.itscloudy.snippedjava.algorithm.bst;
 import lombok.AllArgsConstructor;
 
 public class BTree {
-    private final int maxDegree;
     private final int maxValueIndex;
-    private final int tmpValueIndex;
     private final int maxChildIndex;
-    private final int tmpChildIndex;
     private final int overflowIndex;
-    private final int splitMiddle;
 
     public Node top;
 
     public BTree(int maxDegree) {
-        this.maxDegree = maxDegree;
+        if (maxDegree < 3) {
+            throw new RuntimeException("MaxDegree can't be less than 3");
+        }
+
         maxValueIndex = maxDegree - 2;
-        tmpValueIndex = maxValueIndex + 1;
         maxChildIndex = maxDegree - 1;
-        tmpChildIndex = maxChildIndex + 1;
-        overflowIndex = tmpValueIndex / 2;
-        splitMiddle = overflowIndex + 1;
+        overflowIndex = (maxValueIndex + 1) / 2;
     }
 
     public Node top() {
@@ -29,122 +25,72 @@ public class BTree {
 
     public void insert(int i, String words) {
         if (top == null) {
-            top = new Node(i, words);
+            top = new Node();
+            top.values[0] = new Value(i, words);
         } else {
-            top.insert(new Value(i, words));
-            if (top.needSplit()) {
-                Value newTopValue = top.pourOverflow();
-                Node newNode = top.split();
+            Overflow overflow = null;
+            try {
+                overflow = top.insert(new Value(i, words));
+            } catch (DuplicateKeyException ignore) {
+                // ignore duplicate key
+            }
 
-                Node newTop = new Node(newTopValue);
+            if (overflow != null) {
+                Node newTop = new Node();
+                newTop.values[0] = overflow.value;
                 newTop.children[0] = top;
-                newTop.children[1] = newNode;
-                top = newTop;
+                newTop.children[1] = overflow.newNode;
+                this.top = newTop;
             }
         }
     }
 
     public Value search(int i) {
-        if (top == null) {
-            return null;
-        }
-        return top.search(i);
+        return top == null ? null : top.search(i);
     }
 
     protected class Node {
-        protected final Value[] values = new Value[maxDegree];
-        protected final Node[] children = new Node[maxDegree + 1];
+        protected final Value[] values = new Value[maxValueIndex + 1];
+        protected Node[] children = new Node[maxChildIndex + 1];
 
-        private Node(int i, String words) {
-            values[0] = new Value(i, words);
-        }
-
-        private Node(Value value) {
-            values[0] = value;
-        }
-
-        private void insert(Value v) {
+        private Overflow insert(Value v) {
             if (children[0] == null) {
-                insertToLeaf(v);
-                return;
+                // insert to current node
+                return insert(v, locate(v), null);
             }
 
             // get child branch
             int i = 0;
             Node child = children[0];
-            for (; i < maxChildIndex; i++) {
+            for (; i <= maxChildIndex; i++) {
                 if (values[i] == null || v.i < values[i].i) {
                     child = children[i];
                     break;
                 }
-            }
-            // insert into child branch
-            child.insert(v);
-            if (child.needSplit()) {
-                // pour overflow
-                v = child.pourOverflow();
-                Node newChild = child.split();
-
-                int j = i;
-                Value tmpValue = v;
-                while (j < tmpValueIndex) {
-                    Value tmp1 = values[j];
-                    values[j] = tmpValue;
-                    tmpValue = tmp1;
-                    j++;
-                }
-
-                j = i + 1;
-                Node tmpNode = newChild;
-                while (j < tmpChildIndex) {
-                    Node tmp1 = children[j];
-                    children[j] = tmpNode;
-                    tmpNode = tmp1;
-                    j++;
+                if (v.i == values[i].i) {
+                    // skip same value
+                    throw new DuplicateKeyException();
                 }
             }
+            // insert into child
+            Overflow overflow = child.insert(v);
+            if (overflow == null) {
+                return null;
+            }
+            Node extrudedNode = insertToAscArr(children, overflow.newNode, i + 1);
+            return insert(overflow.value, i, extrudedNode);
         }
 
-        /**
-         * Insert into current leaf
-         *
-         * @param nv New value
-         */
-        private void insertToLeaf(Value nv) {
-            if (values[maxValueIndex] != null) {
-                // overflow
-                this.values[tmpValueIndex] = nv;
-                sortLeafValues();
-                return;
+        private Overflow insert(Value v, int i, Node extrudedNode) {
+            Value extrudedValue = insertToAscArr(values, v, i);
+            if (extrudedValue == null) {
+                return null;
             }
-
-            int i = 0;
-            for (; i <= tmpValueIndex; i++) {
-                // finding the right index of nv
-                if (values[i] == null) {
-                    // insert to the end
-                    values[i] = nv;
-                    return;
-                }
-                if (values[i].i == nv.i) {
-                    // skip same value
-                    return;
-                }
-                if (values[i].i > nv.i) {
-                    break;
-                }
-            }
-
-            Value temp = values[i];
-            values[i] = nv;
-            for (i++; i <= tmpValueIndex; i++) {
-                Value temp1 = values[i];
-                values[i] = temp;
-                if (temp1 == null) {
-                    break;
-                }
-                temp = temp1;
-            }
+            Overflow newOV = new Overflow();
+            newOV.value = values[overflowIndex];
+            values[overflowIndex] = null;
+            newOV.newNode = split(extrudedValue, extrudedNode);
+            return newOV;
         }
 
         /**
@@ -152,38 +98,24 @@ public class BTree {
          *
          * @return new node
          */
-        private Node split() {
-            Node right = new Node(values[splitMiddle]);
-            values[splitMiddle] = null;
-            for (int vi = splitMiddle + 1, rvi = 1; vi <= tmpValueIndex; vi++, rvi++) {
-                right.values[rvi] = values[vi];
-                right.children[rvi] = children[vi];
-                values[vi] = null;
-                children[vi] = null;
+        private Node split(Value extrudedValue, Node extrudedNode) {
+            Node right = new Node();
+            int rightStart = overflowIndex;
+
+            int ri = 0;
+            for (int i = rightStart + 1; i <= maxValueIndex; i++, ri++) {
+                right.values[ri] = values[i];
+                values[i] = null;
             }
+            right.values[ri] = extrudedValue;
+
+            ri = 0;
+            for (int i = rightStart + 1; i <= maxChildIndex; i++, ri++) {
+                right.children[ri] = children[i];
+                children[i] = null;
+            }
+            right.children[ri] = extrudedNode;
             return right;
-        }
-
-        private Value pourOverflow() {
-            Value overflow = values[overflowIndex];
-            values[overflowIndex] = null;
-            return overflow;
-        }
-
-        private void sortLeafValues() {
-            for (int i = 1; i < values.length; i++) {
-                for (int j = 0; j < values.length - i; j++) {
-                    if (values[j].i > values[j + 1].i) {
-                        Value temp = values[j];
-                        values[j] = values[j + 1];
-                        values[j + 1] = temp;
-                    }
-                }
-            }
-        }
-
-        private boolean needSplit() {
-            return values[tmpValueIndex] != null;
         }
 
         public Value search(int i) {
@@ -201,6 +133,35 @@ public class BTree {
             }
             return children[index].search(i);
         }
+
+        private int locate(Value newItem) {
+            int i = 0;
+            for (; i < values.length; i++) {
+                if (values[i] == null) {
+                    break;
+                }
+                if (values[i].i == newItem.i) {
+                    throw new DuplicateKeyException();
+                }
+                if (values[i].i > newItem.i) {
+                    break;
+                }
+            }
+            return i;
+        }
+    }
+
+    /**
+     * @return the extrusion
+     */
+    private static <T> T insertToAscArr(T[] ascArr, T newItem, int index) {
+        T tmp = newItem;
+        for (int i = index; i < ascArr.length; i++) {
+            T tmp1 = ascArr[i];
+            ascArr[i] = tmp;
+            tmp = tmp1;
+        }
+        return tmp;
     }
 
     @AllArgsConstructor
@@ -209,9 +170,12 @@ public class BTree {
         protected final String words;
     }
 
-    private static class Overflow<T> {
-        private T value;
+    private static class Overflow {
+        private Value value;
         private Node newNode;
     }
 
+    private static class DuplicateKeyException extends RuntimeException {
+
+    }
 }
