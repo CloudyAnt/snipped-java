@@ -86,11 +86,11 @@ public class BTree {
             if (extrudedValue == null) {
                 return null;
             }
-            Overflow newOV = new Overflow();
-            newOV.value = values[overflowIndex];
+            Overflow of = new Overflow();
+            of.value = values[overflowIndex];
             values[overflowIndex] = null;
-            newOV.newNode = split(extrudedValue, extrudedNode);
-            return newOV;
+            of.newNode = split(extrudedValue, extrudedNode);
+            return of;
         }
 
         /**
@@ -100,17 +100,15 @@ public class BTree {
          */
         private Node split(Value extrudedValue, Node extrudedNode) {
             Node right = new Node();
-            int rightStart = overflowIndex;
-
             int ri = 0;
-            for (int i = rightStart + 1; i <= maxValueIndex; i++, ri++) {
+            for (int i = overflowIndex + 1; i <= maxValueIndex; i++, ri++) { // values[overflowIndex] was overflowed
                 right.values[ri] = values[i];
                 values[i] = null;
             }
             right.values[ri] = extrudedValue;
 
             ri = 0;
-            for (int i = rightStart + 1; i <= maxChildIndex; i++, ri++) {
+            for (int i = overflowIndex + 1; i <= maxChildIndex; i++, ri++) { // children[overflowIndex] keeps in left
                 right.children[ri] = children[i];
                 children[i] = null;
             }
@@ -136,7 +134,7 @@ public class BTree {
 
         private int locate(Value newItem) {
             int i = 0;
-            for (; i < values.length; i++) {
+            for (; i <= maxValueIndex; i++) {
                 if (values[i] == null) {
                     break;
                 }
