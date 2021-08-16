@@ -22,7 +22,7 @@ public class SplayTree extends AbstractBST<SplayTree.Node> {
 
     @Override
     public void delete(int i) {
-
+        // complete this later
     }
 
     @Override
@@ -30,14 +30,14 @@ public class SplayTree extends AbstractBST<SplayTree.Node> {
         if (top == null || i == top.i) {
             return top;
         }
-        Node node = search(i, this.top);
+        Node node = searchNode(i, this.top);
         if (node != null) {
             top = node;
         }
         return node;
     }
 
-    private Node search(int i, Node p) {
+    private Node searchNode(int i, Node p) {
         if (p.leftMightContain(i)) {
             return searchLeft(i, p);
         }
@@ -52,7 +52,7 @@ public class SplayTree extends AbstractBST<SplayTree.Node> {
             return rightRotate(p);
         }
 
-        Node node = search(i, p.left);
+        Node node = searchNode(i, p.left);
         if (node != null) {
             p.left = node;
             return rightRotate(p);
@@ -69,7 +69,7 @@ public class SplayTree extends AbstractBST<SplayTree.Node> {
             return leftRotate(p);
         }
 
-        Node node = search(i, p.right);
+        Node node = searchNode(i, p.right);
         if (node != null) {
             p.right = node;
             return leftRotate(p);

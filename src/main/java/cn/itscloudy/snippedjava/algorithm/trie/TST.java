@@ -20,30 +20,20 @@ public class TST extends AbstractTrie {
         if (top == null) {
             top = new TSTNode(word.charAt(0));
         }
-
         TSTNode node = top;
         char c = charAt(word, 0);
-        for (int i = 0; ; ) {
+        int i = 0;
+        while (true) {
             int diff = Character.compare(c, node.c);
             if (diff == 0) {
                 if ((c = charAt(word, ++i)) == ENDING) {
                     break;
-                } else {
-                    if (node.equal == null) {
-                        node.equal = new TSTNode(c);
-                    }
-                    node = node.equal;
                 }
+                node = node.getEqual(c);
             } else if (diff < 0) {
-                if (node.left == null) {
-                    node.left = new TSTNode(c);
-                }
-                node = node.left;
+                node = node.getLeft(c);
             } else {
-                if (node.right == null) {
-                    node.right = new TSTNode(c);
-                }
-                node = node.right;
+                node = node.getRight(c);
             }
         }
         node.endOfWord = true;
@@ -56,8 +46,9 @@ public class TST extends AbstractTrie {
         }
 
         TSTNode node = top;
+        int i = 0;
         char c = charAt(word, 0);
-        for (int i = 0; ; ) {
+        while (true) {
             if (node == null) {
                 return false;
             }
@@ -65,9 +56,8 @@ public class TST extends AbstractTrie {
             if (diff == 0) {
                 if ((c = charAt(word, ++i)) == ENDING) {
                     break;
-                } else {
-                    node = node.equal;
                 }
+                node = node.equal;
             } else if (diff < 0) {
                 node = node.left;
             } else {
@@ -96,6 +86,27 @@ public class TST extends AbstractTrie {
         private TSTNode(char c) {
             assertCharValid(c);
             this.c = c;
+        }
+
+        public TSTNode getEqual(char c) {
+            if (equal == null) {
+                equal = new TSTNode(c);
+            }
+            return equal;
+        }
+
+        public TSTNode getLeft(char c) {
+            if (left == null) {
+                left = new TSTNode(c);
+            }
+            return left;
+        }
+
+        public TSTNode getRight(char c) {
+            if (right == null) {
+                right = new TSTNode(c);
+            }
+            return right;
         }
     }
 }

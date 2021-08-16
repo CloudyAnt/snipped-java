@@ -9,7 +9,7 @@ public abstract class AbstractBSTNode<N extends AbstractBSTNode<N>> {
     protected N left;
     protected N right;
 
-    public AbstractBSTNode(int i, String words) {
+    protected AbstractBSTNode(int i, String words) {
         this.i = i;
         this.words = words;
     }

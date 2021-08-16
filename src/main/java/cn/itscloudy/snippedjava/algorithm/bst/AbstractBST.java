@@ -92,7 +92,7 @@ public abstract class AbstractBST<N extends AbstractBSTNode<N>> {
             this.cellStrings = new ArrayList<>();
             cellWidth = cellWidthOf(top);
             height = heightOf(top);
-            width = cellWidth * (int) Math.pow(2, height - 1);
+            width = cellWidth * (int) Math.pow(2, height - 1D);
         }
 
         private void print() {
@@ -106,7 +106,7 @@ public abstract class AbstractBST<N extends AbstractBSTNode<N>> {
             int level = 0;
             while (level < height) {
                 int levelStart = (int) Math.pow(2, level) - 1;
-                int levelEnd = (int) Math.pow(2, level + 1) - 1;
+                int levelEnd = (int) Math.pow(2, level + 1D) - 1;
 
                 print(cellStrings.subList(levelStart, levelEnd), width);
                 System.out.println();

@@ -48,22 +48,10 @@ public class RedBlackTree extends AbstractBST<RedBlackTree.Node> {
 
         // Left/Right if not null, insert to Left/Right
         if (pLeft && p.left != null) {
-            p = insert(x, p.left, p);
-            if (gpLeft) {
-                gp.left = p;
-            } else {
-                gp.right = p;
-            }
-            return gp;
+            return insertToChild(x, p.left, p, gp, gpLeft);
         }
         if (!pLeft && p.right != null) {
-            p = insert(x, p.right, p);
-            if (gpLeft) {
-                gp.left = p;
-            } else {
-                gp.right = p;
-            }
-            return gp;
+            return insertToChild(x, p.right,  p, gp, gpLeft);
         }
 
         if (pLeft) {
@@ -83,7 +71,10 @@ public class RedBlackTree extends AbstractBST<RedBlackTree.Node> {
             return gp;
         }
 
-        // Else, rotate and recolor
+        return rotateAndRecolor(x, p, gp, pLeft, gpLeft);
+    }
+
+    private Node rotateAndRecolor(Node x, Node p, Node gp, boolean pLeft, boolean gpLeft) {
         if (pLeft) {
             if (gpLeft) { // LL
                 blackPAndRedGP(p, gp);
@@ -105,6 +96,16 @@ public class RedBlackTree extends AbstractBST<RedBlackTree.Node> {
         }
     }
 
+    private Node insertToChild(Node x, Node c, Node p, Node gp, boolean gpLeft) {
+        p = insert(x, c, p);
+        if (gpLeft) {
+            gp.left = p;
+        } else {
+            gp.right = p;
+        }
+        return gp;
+    }
+
     private void blackPAndRedGP(Node p, Node gp) {
         gp.setRed();
         p.setBlack();
@@ -112,7 +113,7 @@ public class RedBlackTree extends AbstractBST<RedBlackTree.Node> {
 
     @Override
     public void delete(int i) {
-
+        // complete this later
     }
 
     protected static class Node extends AbstractBSTNode<Node> {

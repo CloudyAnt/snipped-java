@@ -7,7 +7,7 @@ public class BTree {
     private final int maxChildIndex;
     private final int overflowIndex;
 
-    public Node top;
+    protected Node top;
 
     public BTree(int maxDegree) {
         if (maxDegree < 3) {
@@ -135,14 +135,11 @@ public class BTree {
         private int locate(Value newItem) {
             int i = 0;
             for (; i <= maxValueIndex; i++) {
-                if (values[i] == null) {
+                if (values[i] == null || values[i].i > newItem.i) {
                     break;
                 }
                 if (values[i].i == newItem.i) {
                     throw new DuplicateKeyException();
-                }
-                if (values[i].i > newItem.i) {
-                    break;
                 }
             }
             return i;

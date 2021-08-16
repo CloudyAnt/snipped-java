@@ -66,6 +66,7 @@ public class AVL extends AbstractBST<AVL.Node> {
      * @param parent The node of rotation based on
      * @return The new parent
      */
+    @Override
     protected Node rightRotate(Node parent) {
         Node newParent = super.rightRotate(parent);
         resetHeightOf(parent);
@@ -79,6 +80,7 @@ public class AVL extends AbstractBST<AVL.Node> {
      * @param parent The node of rotation based on
      * @return The new parent
      */
+    @Override
     protected Node leftRotate(Node parent) {
         Node newParent = super.leftRotate(parent);
         resetHeightOf(parent);

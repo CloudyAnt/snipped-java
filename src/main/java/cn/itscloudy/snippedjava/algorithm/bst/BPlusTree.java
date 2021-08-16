@@ -3,6 +3,7 @@ package cn.itscloudy.snippedjava.algorithm.bst;
 import lombok.AllArgsConstructor;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * B+ Tree
@@ -68,29 +69,32 @@ public class BPlusTree implements Iterable<BPlusTree.Value> {
     }
 
     private class Itr implements Iterator<Value> {
-        public LeafNode ln;
-        private int index;
+        private LeafNode n;
+        private int i;
 
-        public Itr(LeafNode ln) {
-            this.ln = ln;
-            index = 0;
+        public Itr(LeafNode n) {
+            this.n = n;
+            i = 0;
         }
 
         @Override
         public boolean hasNext() {
-            return index <= maxValueIndex || ln.next != null;
+            return i <= maxValueIndex || n.next != null;
         }
 
         @Override
         public Value next() {
-            if (index <= maxValueIndex && ln.values[index] != null) {
-                return ln.values[index++];
+            if (!hasNext()) {
+                throw new NoSuchElementException();
             }
-            if (ln.next != null) {
-                ln = ln.next;
-                index = 0;
+            if (i <= maxValueIndex && n.values[i] != null) {
+                return n.values[i++];
             }
-            return ln.values[index++];
+            if (n.next != null) {
+                n = n.next;
+                i = 0;
+            }
+            return n.values[i++];
         }
     }
 
@@ -185,14 +189,11 @@ public class BPlusTree implements Iterable<BPlusTree.Value> {
         private int locate(Value newItem) {
             int i = 0;
             for (; i <= maxValueIndex; i++) {
-                if (values[i] == null) {
+                if (values[i] == null || values[i].i > newItem.i) {
                     break;
                 }
                 if (values[i].i == newItem.i) {
                     throw new DuplicateKeyException();
-                }
-                if (values[i].i > newItem.i) {
-                    break;
                 }
             }
             return i;
