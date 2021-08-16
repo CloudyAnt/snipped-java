@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class HeapPollutionTest {
+class MinHeapPollutionTest {
 
     @Test
     void shouldThrowClassCastException() {
