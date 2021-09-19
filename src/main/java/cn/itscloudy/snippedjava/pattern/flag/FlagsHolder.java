@@ -1,27 +1,27 @@
 package cn.itscloudy.snippedjava.pattern.flag;
 
 /**
- * A FlagHolder must implement the {@link #getFlags()} and {@link #setFlags(int)} methods
+ * A FlagHolder must implement the {@link #currentFlags()} and {@link #assignFlags(int)} methods
  */
-public abstract class FlagsHolder<F extends Flag> {
+public interface FlagsHolder<F extends Flag> {
 
-    protected abstract int getFlags();
+    int currentFlags();
 
-    protected abstract void setFlags(int newFlags);
+    void assignFlags(int newFlags);
 
-    public FlagsHolder<F> addFlag(F f) {
-        int newFlags = f.addTo(getFlags());
-        setFlags(newFlags);
+    default FlagsHolder<F> addFlag(F f) {
+        int newFlags = f.addTo(currentFlags());
+        assignFlags(newFlags);
         return this;
     }
 
-    public FlagsHolder<F> removeFlag(F f) {
-        int newFlags = f.removeFrom(getFlags());
-        setFlags(newFlags);
+    default FlagsHolder<F> removeFlag(F f) {
+        int newFlags = f.removeFrom(currentFlags());
+        assignFlags(newFlags);
         return this;
     }
 
-    public boolean matchFlag(F f) {
-        return f.match(getFlags());
+    default boolean hasFlag(F f) {
+        return f.match(currentFlags());
     }
 }

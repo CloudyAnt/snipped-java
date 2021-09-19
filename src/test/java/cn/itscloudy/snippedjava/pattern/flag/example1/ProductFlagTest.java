@@ -9,14 +9,14 @@ class ProductFlagTest {
     @Test
     void shouldAddFlagsToProduct() {
         Product product = new Product();
-        product.setFlags(ProductFlags.RECOMMENDED.flagValue());
+        product.assignFlags(ProductFlags.RECOMMENDED.flagValue());
         product.addFlag(ProductFlags.IMPORTED);
 
         int expected = ProductFlags.RECOMMENDED.flagValue() + ProductFlags.IMPORTED.flagValue();
-        assertEquals(expected, product.getFlags());
-        assertTrue(product.matchFlag(ProductFlags.RECOMMENDED));
-        assertTrue(product.matchFlag(ProductFlags.IMPORTED));
-        assertFalse(product.matchFlag(ProductFlags.SOLD_OUT));
+        assertEquals(expected, product.currentFlags());
+        assertTrue(product.hasFlag(ProductFlags.RECOMMENDED));
+        assertTrue(product.hasFlag(ProductFlags.IMPORTED));
+        assertFalse(product.hasFlag(ProductFlags.SOLD_OUT));
     }
 
     @Test
@@ -24,14 +24,14 @@ class ProductFlagTest {
         Product product = new Product();
         int flags = ProductFlags.RECOMMENDED.flagValue() + ProductFlags.IMPORTED.flagValue() +
                 ProductFlags.SOLD_OUT.flagValue();
-        product.setFlags(flags);
+        product.assignFlags(flags);
         product.removeFlag(ProductFlags.IMPORTED);
         product.removeFlag(ProductFlags.SOLD_OUT);
 
         int expected = ProductFlags.RECOMMENDED.flagValue();
-        assertEquals(expected, product.getFlags());
-        assertFalse(product.matchFlag(ProductFlags.IMPORTED));
-        assertFalse(product.matchFlag(ProductFlags.SOLD_OUT));
-        assertTrue(product.matchFlag(ProductFlags.RECOMMENDED));
+        assertEquals(expected, product.currentFlags());
+        assertFalse(product.hasFlag(ProductFlags.IMPORTED));
+        assertFalse(product.hasFlag(ProductFlags.SOLD_OUT));
+        assertTrue(product.hasFlag(ProductFlags.RECOMMENDED));
     }
 }

@@ -6,11 +6,21 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Product extends FlagsHolder<ProductFlags> {
+public class Product implements FlagsHolder<ProductFlags> {
 
     private int id;
 
     private int flags;
+
+    @Override
+    public int currentFlags() {
+        return flags;
+    }
+
+    @Override
+    public void assignFlags(int newFlags) {
+        this.flags = newFlags;
+    }
 
     // name, brand, etc.
 }

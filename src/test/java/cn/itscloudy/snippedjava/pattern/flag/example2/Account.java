@@ -9,19 +9,19 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class Account extends FlagsHolder<Role> {
+public class Account implements FlagsHolder<Role> {
 
     private int id;
 
     private int roles;
 
     @Override
-    protected int getFlags() {
+    public int currentFlags() {
         return roles;
     }
 
     @Override
-    protected void setFlags(int newFlags) {
+    public void assignFlags(int newFlags) {
         this.roles = newFlags;
     }
 }

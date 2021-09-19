@@ -15,14 +15,14 @@ class AccountFlagTest {
         Account account = new Account();
         account.addFlag(boss).addFlag(manager);
 
-        assertEquals(boss.flagValue() + manager.flagValue(), account.getFlags());
-        assertTrue(boss.match(account.getFlags()));
-        assertTrue(manager.match(account.getFlags()));
-        assertFalse(worker.match(account.getFlags()));
+        assertEquals(boss.flagValue() + manager.flagValue(), account.currentFlags());
+        assertTrue(boss.match(account.currentFlags()));
+        assertTrue(manager.match(account.currentFlags()));
+        assertFalse(worker.match(account.currentFlags()));
 
-        assertFalse(boss.antiMatch(account.getFlags()));
-        assertFalse(manager.antiMatch(account.getFlags()));
-        assertTrue(worker.antiMatch(account.getFlags()));
+        assertFalse(boss.antiMatch(account.currentFlags()));
+        assertFalse(manager.antiMatch(account.currentFlags()));
+        assertTrue(worker.antiMatch(account.currentFlags()));
     }
 
     @Test
@@ -31,14 +31,14 @@ class AccountFlagTest {
         account.addFlag(boss).addFlag(manager).addFlag(worker);
         account.removeFlag(boss).removeFlag(manager);
 
-        assertEquals(worker.flagValue(), account.getFlags());
-        assertFalse(boss.match(account.getFlags()));
-        assertFalse(manager.match(account.getFlags()));
-        assertTrue(worker.match(account.getFlags()));
+        assertEquals(worker.flagValue(), account.currentFlags());
+        assertFalse(boss.match(account.currentFlags()));
+        assertFalse(manager.match(account.currentFlags()));
+        assertTrue(worker.match(account.currentFlags()));
 
-        assertTrue(boss.antiMatch(account.getFlags()));
-        assertTrue(manager.antiMatch(account.getFlags()));
-        assertFalse(worker.antiMatch(account.getFlags()));
+        assertTrue(boss.antiMatch(account.currentFlags()));
+        assertTrue(manager.antiMatch(account.currentFlags()));
+        assertFalse(worker.antiMatch(account.currentFlags()));
     }
 
 }
