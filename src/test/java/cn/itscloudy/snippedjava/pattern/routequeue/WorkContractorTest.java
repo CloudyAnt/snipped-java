@@ -10,7 +10,7 @@ class WorkContractorTest {
 
     @Test
     void shouldReturnNormally() {
-        WorkContractor<WorkFlags> contractor = new WorkContractor<>(2, 3);
+        WorkContractor contractor = new WorkContractor(2, 3);
 
         String result = contractor.accept(1, () -> {
             try {
@@ -25,7 +25,7 @@ class WorkContractorTest {
 
     @Test
     void shouldUseBottomUpPlanIfTimeout() {
-        WorkContractor<WorkFlags> contractor = new WorkContractor<>(2, 3);
+        WorkContractor contractor = new WorkContractor(2, 3);
 
         String result = contractor.accept(1, () -> {
             try {
@@ -40,7 +40,7 @@ class WorkContractorTest {
 
     @Test
     void shouldFinishNormally() {
-        WorkContractor<WorkFlags> contractor = new WorkContractor<>(2, 3);
+        WorkContractor contractor = new WorkContractor(2, 3);
 
         assertDoesNotThrow(() -> contractor.accept(1, () -> {
             try {
@@ -53,7 +53,7 @@ class WorkContractorTest {
 
     @Test
     void shouldThrowIfTimeout() {
-        WorkContractor<WorkFlags> contractor = new WorkContractor<>(2, 3);
+        WorkContractor contractor = new WorkContractor(2, 3);
 
         assertThrows(RuntimeException.class, () -> contractor.accept(1, () -> {
             try {
@@ -66,7 +66,7 @@ class WorkContractorTest {
 
     @Test
     void shouldRunBottomUpPlanIfTimeout() {
-        WorkContractor<WorkFlags> contractor = new WorkContractor<>(2, 3);
+        WorkContractor contractor = new WorkContractor(2, 3);
 
         AtomicBoolean bottomUpPlanCalled = new AtomicBoolean(false);
         contractor.accept(1, () -> {

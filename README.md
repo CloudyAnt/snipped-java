@@ -10,6 +10,7 @@ base package:
 - algorithm [classical algorithm implements]
 - pattern [ways to resolve problems]
     - flag [use one field to save multi status]
+    - routequeue [a solution to the double-write consistency problem]
 - tool [useful utilities]
     - collection
     - math

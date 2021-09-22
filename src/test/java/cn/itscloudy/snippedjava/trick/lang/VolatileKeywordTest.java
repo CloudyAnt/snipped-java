@@ -10,10 +10,10 @@ class VolatileKeywordTest {
     void shouldNotReadChangeIfNotVolatile(){
         VolatileKeyword.VariableWithoutVolatile withoutVolatile = new VolatileKeyword.VariableWithoutVolatile();
         withoutVolatile.start();
-        await(1);
+        await(100);
         withoutVolatile.keepRunning = false;
 
-        await(100);
+        await(1);
         assertEquals(0, withoutVolatile.result);
     }
 
@@ -21,10 +21,10 @@ class VolatileKeywordTest {
     void shouldReadChangeIfVolatile(){
         VolatileKeyword.VariableWithVolatile withVolatile = new VolatileKeyword.VariableWithVolatile();
         withVolatile.start();
-        await(1);
+        await(100);
         withVolatile.keepRunning = false;
 
-        await(100);
+        await(1);
         assertEquals(1, withVolatile.result);
     }
 

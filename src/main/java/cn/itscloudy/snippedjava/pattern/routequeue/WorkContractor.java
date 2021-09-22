@@ -1,22 +1,15 @@
 package cn.itscloudy.snippedjava.pattern.routequeue;
 
-import cn.itscloudy.snippedjava.pattern.flag.Flag;
-import cn.itscloudy.snippedjava.pattern.flag.FlagsHolder;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
  * Contractor receive work then route it to worker by id
- *
- * @param <F> The flags hold by the worker, the work content could contain adding or removing flag
  */
-public class WorkContractor<F extends Flag> {
+public class WorkContractor {
 
     private final List<ArrayBlockingQueue<Work>> queues;
     public static boolean acceptingWork = true;

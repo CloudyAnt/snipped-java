@@ -28,7 +28,7 @@ public class VolatileKeyword {
         @Override
         public void run() {
             while (keepRunning) {
-                Thread.onSpinWait();
+//                Thread.onSpinWait(); // This method would hidden the volatile effects
             }
             result = 1;
         }
