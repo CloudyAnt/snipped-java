@@ -15,10 +15,17 @@ public abstract class IntegerRedefiner {
     private final Map<Character, Integer> charIntMap;
     private final int radix;
 
+    /**
+     * @param chars redefined symbols. chars.length equals to the radix
+     */
     protected IntegerRedefiner(char... chars) {
         this(chars, '-');
     }
 
+    /**
+     * @param chars redefined symbols. chars.length equals to the radix
+     * @param negative negative symbol
+     */
     protected IntegerRedefiner(char[] chars, char negative) {
         this.charIntMap = new HashMap<>();
         if (chars.length < Character.MIN_RADIX) {
@@ -29,9 +36,12 @@ public abstract class IntegerRedefiner {
         for (int i = 0; i < chars.length; i++) {
             Integer existentI = charIntMap.get(chars[i]);
             if (existentI != null) {
-                throw new NumberFormatException("Char '" + existentI + "' duplicated!");
+                throw new NumberFormatException("Char '" + existentI + "' is duplicated!");
             }
             charIntMap.put(chars[i], i);
+        }
+        if (charIntMap.get(negative) != null) {
+            throw new NumberFormatException("Negative char '" + negative + "' is duplicated with chars!");
         }
 
         this.chars = chars;
