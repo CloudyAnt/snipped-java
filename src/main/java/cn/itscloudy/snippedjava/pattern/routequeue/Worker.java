@@ -2,7 +2,6 @@ package cn.itscloudy.snippedjava.pattern.routequeue;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 public class Worker implements Callable<Boolean> {
 
@@ -16,10 +15,12 @@ public class Worker implements Callable<Boolean> {
     public Boolean call() {
         while (WorkContractor.acceptingWork) {
             try {
-                Work work = this.queue.poll(1, TimeUnit.NANOSECONDS);
-                if (work != null) {
-                    work.accept();
-                }
+                /*
+                 * As to https://stackoverflow.com/a/23379710/9275156
+                 * poll() will cause performance problems, but take() won't
+                 */
+                Work work = this.queue.take();
+                work.accept();
             } catch (Exception e) {
                 e.printStackTrace();
             }
