@@ -7,8 +7,15 @@ public class Worker implements Callable<Boolean> {
 
     private final ArrayBlockingQueue<Work> queue;
 
-    public Worker(ArrayBlockingQueue<Work> queue) {
-        this.queue = queue;
+    private final int maxWorksSize;
+
+    public Worker(int maxWorksSize) {
+        this.queue = new ArrayBlockingQueue<>(maxWorksSize);
+        this.maxWorksSize = maxWorksSize;
+    }
+
+    public void add(Work work) {
+        queue.add(work);
     }
 
     @Override
@@ -16,7 +23,7 @@ public class Worker implements Callable<Boolean> {
         while (WorkContractor.acceptingWork) {
             try {
                 /*
-                 * As to https://stackoverflow.com/a/23379710/9275156
+                 * According to https://stackoverflow.com/a/23379710/9275156
                  * poll() will cause performance problems, but take() won't
                  */
                 Work work = this.queue.take();

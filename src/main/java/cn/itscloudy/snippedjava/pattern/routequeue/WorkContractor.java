@@ -11,20 +11,22 @@ import java.util.function.Supplier;
  */
 public class WorkContractor {
 
-    private final List<ArrayBlockingQueue<Work>> queues;
+    private final List<Worker> workers;
     public static boolean acceptingWork = true;
+    private final int workersSize;
 
     public WorkContractor(int workersSize, int maxWorksSizePerWorker) {
-        queues = new ArrayList<>(workersSize);
+        this.workersSize = workersSize;
+        workers = new ArrayList<>(workersSize);
         ExecutorService workerThreadsPool = new ThreadPoolExecutor(workersSize, workersSize,
                 0L, TimeUnit.MILLISECONDS,
                 new LinkedBlockingQueue<>(),
                 new WorkerThreadFactory());
 
         for (int i = 0; i < workersSize; i++) {
-            ArrayBlockingQueue<Work> queue = new ArrayBlockingQueue<>(maxWorksSizePerWorker);
-            queues.add(queue);
-            workerThreadsPool.submit(new Worker(queue));
+            Worker worker = new Worker(maxWorksSizePerWorker);
+            workers.add(worker);
+            workerThreadsPool.submit(worker);
         }
     }
 
@@ -39,7 +41,7 @@ public class WorkContractor {
         int index = route(id);
 
         ReturnableWork<R> work = new ReturnableWork<>(content);
-        queues.get(index).add(work);
+        workers.get(index).add(work);
         return work;
     }
 
@@ -53,13 +55,13 @@ public class WorkContractor {
         int index = route(id);
 
         VoidWork work = new VoidWork(content);
-        queues.get(index).add(work);
+        workers.get(index).add(work);
         return work;
     }
 
     private int route(Object id) {
         int hash = id == null ? 0 : id.hashCode() ^ (id.hashCode() >>> 16);
-        return hash % this.queues.size();
+        return hash % workersSize;
     }
 
     private static class WorkerThreadFactory implements ThreadFactory {
