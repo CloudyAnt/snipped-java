@@ -7,7 +7,6 @@ public class ReturnableWork<R> extends Work {
     private final Supplier<R> content;
 
     private R result;
-    private volatile boolean done;
 
     public ReturnableWork(Supplier<R> content) {
         this.content = content;
@@ -16,31 +15,22 @@ public class ReturnableWork<R> extends Work {
     @Override
     protected void accept() {
         this.result = content.get();
-        this.done = true;
-    }
-
-    @Override
-    public boolean isDone() {
-        return done;
+        countDownLatch();
     }
 
     public R get(int waitMillis, Supplier<RuntimeException> onTimeOut) {
-        long endMills = System.currentTimeMillis() + waitMillis;
-        while (!done) {
-            if (System.currentTimeMillis() > endMills) {
-                throw onTimeOut.get();
-            }
+        if (awaitLatch(waitMillis)) {
+            return result;
+        } else {
+            throw onTimeOut.get();
         }
-        return result;
     }
 
     public R getOr(int waitMillis, Supplier<R> bottomUpPlan) {
-        long waitingEndAt = System.currentTimeMillis() + waitMillis;
-        while (!done) {
-            if (System.currentTimeMillis() > waitingEndAt) {
-                return bottomUpPlan.get();
-            }
+        if (awaitLatch(waitMillis)) {
+            return result;
+        } else {
+            return bottomUpPlan.get();
         }
-        return result;
     }
 }
