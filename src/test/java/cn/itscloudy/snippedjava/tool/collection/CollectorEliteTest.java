@@ -125,8 +125,8 @@ class CollectorEliteTest {
 
     @Test
     void shouldGetSubList() {
-        List<User> users = CollectorElite.subList(USERS, 2, 5);
-        List<User> users1 = CollectorElite.subList(USERS, 3, 2);
+        List<User> users = CollectorElite.subAmount(USERS, 2, 5);
+        List<User> users1 = CollectorElite.subAmount(USERS, 3, 2);
         assertEquals(1, users.size());
         assertEquals("JULIET", users.get(0).getName());
         assertEquals(0, users1.size());
@@ -162,7 +162,7 @@ class CollectorEliteTest {
         newPolaris6Crew.add(JACK);
         newPolaris6Crew.add(ROSE);
 
-        List<User> subtraction = CollectorElite.subtract(newPolaris6Crew, POLARIS6_CREW);
+        List<User> subtraction = CollectorElite.difference(newPolaris6Crew, POLARIS6_CREW);
         assertEquals(2, subtraction.size());
         assertTrue(subtraction.contains(JACK));
         assertTrue(subtraction.contains(ROSE));
@@ -170,7 +170,7 @@ class CollectorEliteTest {
 
     @Test
     void shouldGetListSubtractedByComparator() {
-        List<User> subtraction = CollectorElite.subtract(POLARIS6_CREW, USERS,
+        List<User> subtraction = CollectorElite.difference(POLARIS6_CREW, USERS,
                 (u1, u2) -> u1.getName().length() == u2.getName().length());
 
         assertEquals(3, subtraction.size());

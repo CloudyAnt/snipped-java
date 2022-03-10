@@ -6,7 +6,7 @@ package cn.itscloudy.snippedjava.pattern.flag;
 public interface Flag {
 
     /**
-     * The referring bit ordinal.
+     * Referring to the bit ordinal.
      * The {@link Enum} contains this method.
      * You can also use id of an entity as ordinal.
      */

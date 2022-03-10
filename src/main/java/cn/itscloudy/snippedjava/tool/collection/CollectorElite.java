@@ -111,7 +111,7 @@ public class CollectorElite {
      * Presuming a list has elements [1, 2, 3], subList(list, -1, 3) would return [1, 2],
      * and subList(list, 3, 3) would return []
      */
-    public static <A> List<A> subList(List<A> list, int from, int amount) {
+    public static <A> List<A> subAmount(List<A> list, int from, int amount) {
         if (list.isEmpty()) {
             return Collections.emptyList();
         }
@@ -144,7 +144,7 @@ public class CollectorElite {
         return intersection;
     }
 
-    public static <A> List<A> subtract(Collection<A> collection, Collection<A> otherCollection) {
+    public static <A> List<A> difference(Collection<A> collection, Collection<A> otherCollection) {
         ArrayList<A> collectionList = new ArrayList<>(collection);
         for (A a : otherCollection) {
             collectionList.remove(a);
@@ -152,8 +152,8 @@ public class CollectorElite {
         return collectionList;
     }
 
-    public static <A> List<A> subtract(Collection<A> collection, Collection<A> otherCollection,
-                                       BiPredicate<A, A> comparator) {
+    public static <A> List<A> difference(Collection<A> collection, Collection<A> otherCollection,
+                                         BiPredicate<A, A> comparator) {
 
         ArrayList<A> collectionList = new ArrayList<>(collection);
         for (A a : otherCollection) {
@@ -298,4 +298,15 @@ public class CollectorElite {
         return ultra;
     }
 
+    public static <A, F extends Comparable<? super F>> List<A> ascend(Collection<A> as, Function<A, F> fieldGetter) {
+        ArrayList<A> aArrayList = new ArrayList<>(as);
+        aArrayList.sort(Comparator.comparing(fieldGetter));
+        return aArrayList;
+    }
+
+    public static <A, F extends Comparable<? super F>> List<A> descend(Collection<A> as, Function<A, F> fieldGetter) {
+        ArrayList<A> aArrayList = new ArrayList<>(as);
+        aArrayList.sort(Comparator.comparing(fieldGetter).reversed());
+        return aArrayList;
+    }
 }
