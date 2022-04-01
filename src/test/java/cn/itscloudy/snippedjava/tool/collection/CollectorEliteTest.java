@@ -276,6 +276,18 @@ class CollectorEliteTest {
         assertEquals(MAGGIE.getAge(), minAge);
     }
 
+    @Test
+    void shouldAscend() {
+        List<User> ascendedUsers = CollectorElite.ascend(POLARIS6_CREW, User::getAge);
+        assertListValues(ascendedUsers, MAGGIE, AKI, ANIKA, EBBA, ERICK);
+    }
+
+    @Test
+    void shouldDescend() {
+        List<User> ascendedUsers = CollectorElite.descend(POLARIS6_CREW, User::getAge);
+        assertListValues(ascendedUsers, ERICK, EBBA, ANIKA, AKI, MAGGIE);
+    }
+
     @SafeVarargs
     private <T> void assertListValues(List<T> list, T... ts) {
         assertEquals(ts.length, list.size());

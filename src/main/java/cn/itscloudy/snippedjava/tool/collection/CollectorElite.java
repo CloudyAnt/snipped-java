@@ -107,7 +107,7 @@ public class CollectorElite {
 
     /**
      * Different from {@link List#subList(int, int)}, this method will never throw an exception,
-     * and always return an list that contains existent elements <p>
+     * and always return a list that contains existent elements <p>
      * Presuming a list has elements [1, 2, 3], subList(list, -1, 3) would return [1, 2],
      * and subList(list, 3, 3) would return []
      */

@@ -7,7 +7,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * A container object contains the execution result of an Supplier
+ * A container object contains the execution result of a Supplier
  *
  * @see Optional
  */
