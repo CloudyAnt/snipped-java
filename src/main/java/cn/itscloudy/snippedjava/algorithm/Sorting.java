@@ -59,11 +59,8 @@ public enum Sorting {
     }
 
     private static int[] insertion(int[] arr) {
-        for (int i = 0; i < arr.length - 1; i++) {
-            for (int j = i + 1; j > 0; j--) {
-                if (arr[j] > arr[j - 1]) {
-                    break;
-                }
+        for (int i = 1; i < arr.length; i++) {
+            for (int j = i; j > 0 && arr[j] < arr[j - 1]; j--) {
                 swap(arr, j, j - 1);
             }
         }
@@ -85,14 +82,14 @@ public enum Sorting {
     }
 
     private static int partition(int[] arr, int l, int r) {
-        int i = l - 1;
+        int partitionIndex = l - 1;
         for (; l < r; l++) {
             if (arr[l] < arr[r]) {
-                swap(arr, ++i, l);
+                swap(arr, ++partitionIndex, l);
             }
         }
-        swap(arr, ++i, r);
-        return i;
+        swap(arr, ++partitionIndex, r);
+        return partitionIndex;
     }
 
     private static int[] heap(int[] arr) {
