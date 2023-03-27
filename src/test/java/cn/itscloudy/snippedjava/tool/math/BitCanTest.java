@@ -10,7 +10,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class BitsTest {
+class BitCanTest {
 
     @ParameterizedTest(name = "Init by size {0}")
     @CsvSource({
@@ -19,11 +19,11 @@ class BitsTest {
             "0"
     })
     void shouldInitBySize(int size) {
-        Bits bits = Bits.ofSize(size);
-        assertEquals(size, bits.size());
+        BitCan bitCan = BitCan.ofSize(size);
+        assertEquals(size, bitCan.size());
 
         for (int i = size; i > 0; i--) {
-            assertFalse(bits.testBit(i));
+            assertFalse(bitCan.testBit(i));
         }
     }
 
@@ -35,9 +35,9 @@ class BitsTest {
             "1025, 10|0",
     })
     void shouldInitByDecimal(long decimal, @ConvertWith(CsvIntArrConverter.class) int[] indices) {
-        Bits bits = Bits.ofDecimal(decimal);
+        BitCan bitCan = BitCan.ofDecimal(decimal);
         for (int index : indices) {
-            assertTrue(bits.testBit(index));
+            assertTrue(bitCan.testBit(index));
         }
     }
 
@@ -49,9 +49,9 @@ class BitsTest {
             "111, 0|1|2"
     })
     void shouldInitByBitString(String bitString, @ConvertWith(CsvIntArrConverter.class) int[] indices) {
-        Bits bits = Bits.ofBitString(bitString);
+        BitCan bitCan = BitCan.ofBitString(bitString);
         for (int index : indices) {
-            assertTrue(bits.testBit(index));
+            assertTrue(bitCan.testBit(index));
         }
     }
 
@@ -64,9 +64,9 @@ class BitsTest {
             "1F, 0|1|2|3|4"
     })
     void shouldInitByHexString(String hexString, @ConvertWith(CsvIntArrConverter.class) int[] indices) {
-        Bits bits = Bits.ofHexString(hexString);
+        BitCan bitCan = BitCan.ofHexString(hexString);
         for (int index : indices) {
-            assertTrue(bits.testBit(index));
+            assertTrue(bitCan.testBit(index));
         }
     }
 
@@ -78,8 +78,8 @@ class BitsTest {
             "11010, 1|3|4",
     })
     void shouldTo0BasedIndices(String bitString, @ConvertWith(CsvIntArrConverter.class) int[] expectations) {
-        Bits bits = Bits.ofBitString(bitString);
-        List<Integer> indices = bits.to0BasedIndices();
+        BitCan bitCan = BitCan.ofBitString(bitString);
+        List<Integer> indices = bitCan.to0BasedIndices();
         assertEquals(expectations.length, indices.size());
         for (int i = 0; i < expectations.length; i++) {
             assertEquals(expectations[i], indices.get(i));
@@ -95,8 +95,8 @@ class BitsTest {
             "11010, 2|4|5",
     })
     void shouldTo1BasedIndices(String bitString, @ConvertWith(CsvIntArrConverter.class) int[] expectations) {
-        Bits bits = Bits.ofBitString(bitString);
-        List<Integer> indices = bits.to1basedIndices();
+        BitCan bitCan = BitCan.ofBitString(bitString);
+        List<Integer> indices = bitCan.to1basedIndices();
         assertEquals(expectations.length, indices.size());
         for (int i = 0; i < expectations.length; i++) {
             assertEquals(expectations[i], indices.get(i));
@@ -110,8 +110,8 @@ class BitsTest {
             "1010, 1010",
     })
     void shouldToBitString(String bitString, String expectation) {
-        Bits bits = Bits.ofBitString(bitString);
-        assertEquals(expectation, bits.toBitString());
+        BitCan bitCan = BitCan.ofBitString(bitString);
+        assertEquals(expectation, bitCan.toBitString());
     }
 
     @ParameterizedTest(name = "To reversed bit string of bit string {0}")
@@ -121,8 +121,8 @@ class BitsTest {
             "1010, 0101",
     })
     void shouldToRecBitString(String bitString, String expectation) {
-        Bits bits = Bits.ofBitString(bitString);
-        assertEquals(expectation, bits.toRevBitString());
+        BitCan bitCan = BitCan.ofBitString(bitString);
+        assertEquals(expectation, bitCan.toRevBitString());
     }
 
     @ParameterizedTest(name = "To hex string of bit string {0}")
@@ -133,8 +133,8 @@ class BitsTest {
             "11010, 1A",
     })
     void shouldToHexString(String bitString, String expectation) {
-        Bits bits = Bits.ofBitString(bitString);
-        assertEquals(expectation, bits.toHexString());
+        BitCan bitCan = BitCan.ofBitString(bitString);
+        assertEquals(expectation, bitCan.toHexString());
     }
 
     @ParameterizedTest(name = "To decimal of bit string {0}")
@@ -145,8 +145,8 @@ class BitsTest {
             "11010, 26",
     })
     void shouldToDecimal(String bitString, int expectation) {
-        Bits bits = Bits.ofBitString(bitString);
-        assertEquals(expectation, bits.toDecimal());
+        BitCan bitCan = BitCan.ofBitString(bitString);
+        assertEquals(expectation, bitCan.toDecimal());
     }
 
     @ParameterizedTest(name = "Use {0} include {1}")
@@ -157,10 +157,10 @@ class BitsTest {
             "100, 0011, 0111",
     })
     void shouldInclude(String a, String b, String expectation) {
-        Bits bitsA = Bits.ofBitString(a);
-        Bits bitsB = Bits.ofBitString(b);
-        bitsA.include(bitsB);
-        assertEquals(expectation, bitsA.toBitString());
+        BitCan bitCanA = BitCan.ofBitString(a);
+        BitCan bitCanB = BitCan.ofBitString(b);
+        bitCanA.include(bitCanB);
+        assertEquals(expectation, bitCanA.toBitString());
     }
 
     @ParameterizedTest(name = "Let {0} exclude {1}")
@@ -171,10 +171,10 @@ class BitsTest {
             "1011, 0011, 1000",
     })
     void shouldExclude(String a, String b, String expectation) {
-        Bits bitsA = Bits.ofBitString(a);
-        Bits bitsB = Bits.ofBitString(b);
-        bitsA.exclude(bitsB);
-        assertEquals(expectation, bitsA.toBitString());
+        BitCan bitCanA = BitCan.ofBitString(a);
+        BitCan bitCanB = BitCan.ofBitString(b);
+        bitCanA.exclude(bitCanB);
+        assertEquals(expectation, bitCanA.toBitString());
     }
 
     @ParameterizedTest(name = "Get subtraction of {0} and {1}")
@@ -185,9 +185,9 @@ class BitsTest {
             "1011, 0011, 1000",
     })
     void shouldGetSubtract(String a, String b, String expectation) {
-        Bits bitsA = Bits.ofBitString(a);
-        Bits bitsB = Bits.ofBitString(b);
-        Bits subtraction = bitsA.subtract(bitsB);
+        BitCan bitCanA = BitCan.ofBitString(a);
+        BitCan bitCanB = BitCan.ofBitString(b);
+        BitCan subtraction = bitCanA.subtract(bitCanB);
         assertEquals(expectation, subtraction.toBitString());
     }
 
@@ -199,9 +199,9 @@ class BitsTest {
             "11001011, 00110100",
     })
     void shouldInvert(String origin, String complement) {
-        Bits bits = Bits.ofBitString(origin);
-        bits.invert();
-        assertEquals(complement, bits.toBitString());
+        BitCan bitCan = BitCan.ofBitString(origin);
+        bitCan.invert();
+        assertEquals(complement, bitCan.toBitString());
     }
 
     @ParameterizedTest(name = "Get copy of {0}")
@@ -212,16 +212,16 @@ class BitsTest {
             "11001011, 11001011",
     })
     void shouldGetCopy(String origin, String copy) {
-        Bits bits = Bits.ofBitString(origin);
-        Bits copedBits = bits.copy();
-        assertEquals(copy, copedBits.toBitString());
+        BitCan bitCan = BitCan.ofBitString(origin);
+        BitCan copedBitCan = bitCan.copy();
+        assertEquals(copy, copedBitCan.toBitString());
     }
 
     @Test
     void shouldEquals() {
         String sameBits = "10110";
-        Bits bits1 = Bits.ofBitString(sameBits);
-        Bits bits2 = Bits.ofBitString(sameBits);
-        assertEquals(bits1, bits2);
+        BitCan bitCan1 = BitCan.ofBitString(sameBits);
+        BitCan bitCan2 = BitCan.ofBitString(sameBits);
+        assertEquals(bitCan1, bitCan2);
     }
 }

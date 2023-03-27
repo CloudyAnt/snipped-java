@@ -3,20 +3,20 @@ package cn.itscloudy.snippedjava.tool.math;
 import java.util.*;
 
 /**
- * A Bits contains a boolean array which referring to a bit array. With the bit array you can operate binary easily
+ * A BitCan contains a boolean array which referring to a bit array. With the bit array you can operate binary easily
  */
-public class Bits {
+public class BitCan {
 
     private boolean[] values;
 
-    private Bits() {
+    private BitCan() {
     }
 
-    public Bits(boolean[] values) {
+    public BitCan(boolean[] values) {
         this.values = values;
     }
 
-    public static Bits ofDecimal(long decimal) {
+    public static BitCan ofDecimal(long decimal) {
         int i = 0;
 
         ArrayList<Integer> indices = new ArrayList<>();
@@ -31,11 +31,11 @@ public class Bits {
         return ofIndices(indices, true);
     }
 
-    public static Bits ofSize(int size) {
-        return new Bits(new boolean[size]);
+    public static BitCan ofSize(int size) {
+        return new BitCan(new boolean[size]);
     }
 
-    public static Bits ofIndices(Collection<Integer> indices, boolean basedOn0) {
+    public static BitCan ofIndices(Collection<Integer> indices, boolean basedOn0) {
         Integer size = 0;
         for (Integer index : indices) {
             if (index > size) {
@@ -47,12 +47,12 @@ public class Bits {
         for (Integer index : indices) {
             bits[index + offset] = true;
         }
-        return new Bits(bits);
+        return new BitCan(bits);
     }
 
     private static final int[] bitValues = new int[]{1, 2, 4, 8};
 
-    public static Bits ofHexString(String hexStr) {
+    public static BitCan ofHexString(String hexStr) {
         int len = hexStr.length();
         boolean[] bits = new boolean[len * 4];
 
@@ -71,10 +71,10 @@ public class Bits {
                 bits[index++] = (decimal & bitValues[bi]) == bitValues[bi];
             }
         }
-        return new Bits(bits);
+        return new BitCan(bits);
     }
 
-    public static Bits ofBitString(String bitString) {
+    public static BitCan ofBitString(String bitString) {
         int len = bitString.length();
         boolean[] bits = new boolean[len];
 
@@ -89,7 +89,7 @@ public class Bits {
                 throw new NumberFormatException(bitString + " -×-> bits, invalid char: " + c);
             }
         }
-        return new Bits(bits);
+        return new BitCan(bits);
     }
 
     public void setBit(int index) {
@@ -117,13 +117,13 @@ public class Bits {
     /**
      * Equivalent to (a | b)
      */
-    public void include(Bits bBits) {
-        if (bBits.size() > values.length) {
-            values = Arrays.copyOf(values, bBits.size());
+    public void include(BitCan bBitCan) {
+        if (bBitCan.size() > values.length) {
+            values = Arrays.copyOf(values, bBitCan.size());
         }
 
         for (int i = 0; i < values.length; i++) {
-            if (bBits.testBit(i)) {
+            if (bBitCan.testBit(i)) {
                 setBit(i);
             }
         }
@@ -132,9 +132,9 @@ public class Bits {
     /**
      * Equivalent to (a & ~b)
      */
-    public void exclude(Bits bBits) {
+    public void exclude(BitCan bBitCan) {
         for (int i = 0; i < values.length; i++) {
-            if (testBit(i) && bBits.testBit(i)) {
+            if (testBit(i) && bBitCan.testBit(i)) {
                 clearBit(i);
             }
         }
@@ -152,24 +152,24 @@ public class Bits {
     /**
      * Equivalent to (c = a & ~b)
      */
-    public Bits subtract(Bits bBits) {
-        Bits newBits = copy();
-        newBits.exclude(bBits);
-        return newBits;
+    public BitCan subtract(BitCan bBitCan) {
+        BitCan newBitCan = copy();
+        newBitCan.exclude(bBitCan);
+        return newBitCan;
     }
 
     /**
      * Works as clone()
      */
-    public Bits copy() {
-        Bits newBits = new Bits();
-        newBits.values = new boolean[values.length];
+    public BitCan copy() {
+        BitCan newBitCan = new BitCan();
+        newBitCan.values = new boolean[values.length];
         for (int i = 0; i < values.length; i++) {
             if (values[i]) {
-                newBits.setBit(i);
+                newBitCan.setBit(i);
             }
         }
-        return newBits;
+        return newBitCan;
     }
 
     public String toBitString() {
@@ -258,11 +258,11 @@ public class Bits {
             return true;
         }
 
-        if (!(obj instanceof Bits)) {
+        if (!(obj instanceof BitCan)) {
             return false;
         }
 
-        Bits other = (Bits) obj;
+        BitCan other = (BitCan) obj;
         int maxSize = Math.max(size(), other.size());
         for (int i = 0; i < maxSize; i++) {
             if (testBit(i) != other.testBit(i)) {
