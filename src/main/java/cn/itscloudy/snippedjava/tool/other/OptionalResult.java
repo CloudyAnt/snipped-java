@@ -2,6 +2,7 @@ package cn.itscloudy.snippedjava.tool.other;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -12,34 +13,34 @@ import java.util.function.Supplier;
  * @see Optional
  */
 public class OptionalResult<T> {
-    private Exception e;
+    private Throwable e;
     private T value;
-    private long mills;
+    private long elapsedTime;
 
     private OptionalResult() {
 
     }
 
-    public static <T> OptionalResult<T> of(Supplier<? extends T> supplier, boolean recordMills) {
-        if (!recordMills) {
-            return of(supplier);
+    public static <T> OptionalResult<T> of(Callable<? extends T> callable, boolean recordEt) {
+        if (!recordEt) {
+            return of(callable);
         }
 
         long startTime = System.currentTimeMillis();
-        OptionalResult<T> result = of(supplier);
-        result.mills = System.currentTimeMillis() - startTime;
+        OptionalResult<T> result = of(callable);
+        result.elapsedTime = System.currentTimeMillis() - startTime;
         return result;
     }
 
-    public static <T> OptionalResult<T> of(Supplier<? extends T> supplier) {
+    public static <T> OptionalResult<T> of(Callable<? extends T> callable) {
         try {
-            return ofValue(supplier.get());
+            return ofValue(callable.call());
         } catch (Exception e) {
-            return ofException(e);
+            return ofThrowable(e);
         }
     }
 
-    private static <T> OptionalResult<T> ofException(Exception e) {
+    private static <T> OptionalResult<T> ofThrowable(Throwable e) {
         OptionalResult<T> holder = new OptionalResult<>();
         holder.e = e;
         return holder;
@@ -51,7 +52,7 @@ public class OptionalResult<T> {
         return holder;
     }
 
-    public <X extends Throwable> T orElseThrow(Function<Exception, X> exceptionExchanger) throws X {
+    public <X extends Throwable> T orElseThrow(Function<Throwable, X> exceptionExchanger) throws X {
         if (e != null) {
             throw exceptionExchanger.apply(e);
         }
@@ -72,13 +73,13 @@ public class OptionalResult<T> {
         return value;
     }
 
-    public void ifSuccess(Consumer<? super T> consumer) {
+    public void ifPresent(Consumer<? super T> consumer) {
         if (value != null) {
             consumer.accept(value);
         }
     }
 
-    public boolean isSuccess() {
+    public boolean isPresent() {
         return value != null;
     }
 
@@ -86,12 +87,12 @@ public class OptionalResult<T> {
         return value;
     }
 
-    public Exception exception() {
+    public Throwable getE() {
         return e;
     }
 
-    public long mills() {
-        return mills;
+    public long elapsedTime() {
+        return elapsedTime;
     }
 
     public Optional<T> optional() {

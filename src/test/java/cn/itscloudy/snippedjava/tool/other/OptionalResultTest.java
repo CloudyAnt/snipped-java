@@ -14,13 +14,13 @@ class OptionalResultTest {
         String result = "MONKEY";
         OptionalResult<String> or = OptionalResult.of(() -> result);
 
-        assertTrue(or.isSuccess());
+        assertTrue(or.isPresent());
         assertEquals(result, or.get());
-        assertNull(or.exception());
+        assertNull(or.getE());
         assertEquals(result, or.orElseThrow(e -> new RuntimeException("E")));
 
         AtomicBoolean succeed = new AtomicBoolean(false);
-        or.ifSuccess(s -> succeed.set(true));
+        or.ifPresent(s -> succeed.set(true));
         assertTrue(succeed.get());
 
         Optional<String> optional = or.optional();
@@ -38,15 +38,15 @@ class OptionalResultTest {
             return "Unexpected Value";
         });
 
-        assertFalse(or.isSuccess());
+        assertFalse(or.isPresent());
         assertNull(or.get());
-        assertEquals(ex, or.exception());
+        assertEquals(ex, or.getE());
         assertThrows(RuntimeException.class, () -> or.orElseThrow(e -> new RuntimeException("E")));
         assertEquals("Other value", or.orElse("Other value"));
         assertEquals("Other value", or.orElseGet(() -> "Other value"));
 
         AtomicBoolean succeed = new AtomicBoolean(false);
-        or.ifSuccess(s -> succeed.set(true));
+        or.ifPresent(s -> succeed.set(true));
         assertFalse(succeed.get());
 
         Optional<String> optional = or.optional();

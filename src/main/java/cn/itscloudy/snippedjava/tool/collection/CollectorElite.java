@@ -108,8 +108,8 @@ public class CollectorElite {
     /**
      * Different from {@link List#subList(int, int)}, this method will never throw an exception,
      * and always return a list that contains existent elements <p>
-     * Presuming a list has elements [1, 2, 3], subList(list, -1, 3) would return [1, 2],
-     * and subList(list, 3, 3) would return []
+     * Presuming a list has elements [1, 2, 3], subAmount(list, -1, 3) would return [1, 2],
+     * and subAmount(list, 3, 3) would return []
      */
     public static <A> List<A> subAmount(List<A> list, int from, int amount) {
         if (list.isEmpty()) {

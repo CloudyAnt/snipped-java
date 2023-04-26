@@ -13,7 +13,7 @@ public class Switcher<T> {
     private final Consumer<T> def;
 
     /**
-     * @param def equivalent to default segment
+     * @param def default segment
      */
     private Switcher(Consumer<T> def) {
         this.def = def;

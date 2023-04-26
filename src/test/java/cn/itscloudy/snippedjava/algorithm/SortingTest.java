@@ -45,7 +45,7 @@ class SortingTest {
     }
 
     private void printResult(Sorting algorithm, OptionalResult<int[]> result) {
-        System.out.println(algorithm.name() + " > " + result.mills() + "ms");
+        System.out.println(algorithm.name() + " > " + result.elapsedTime() + "ms");
     }
 
     private int[] generateOrderedArrayWithLength1000() {
