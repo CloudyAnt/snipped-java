@@ -2,6 +2,8 @@
 
 My library of java snippets. You can check if it helps you too.
 
+Remember, this project is not aimed to provide a complete solution, but to provide a way to solve problems.
+
 ## Hierarchy
 
 The base package is **cn.itscloudy.snippedjava**
