@@ -20,7 +20,7 @@ class SortingTest {
         randomSwapArr(shuffledLongArray);
     }
 
-    @ParameterizedTest(name = "sort by algorithm ${0}")
+    @ParameterizedTest(name = "sort by algorithm {0}")
     @EnumSource(Sorting.class)
     void shouldSort(Sorting algorithm) {
         if (algorithm.notReady()) {

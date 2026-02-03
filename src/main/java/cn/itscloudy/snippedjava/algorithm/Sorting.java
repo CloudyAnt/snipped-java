@@ -38,10 +38,14 @@ public enum Sorting {
 
     private static int[] selection(int[] arr) {
         for (int i = 0; i < arr.length - 1; i++) {
+            int minIdx = i;
             for (int j = i + 1; j < arr.length; j++) {
-                if (arr[i] > arr[j]) {
-                    swap(arr, i, j);
+                if (arr[j] < arr[minIdx]) {
+                    minIdx = j;
                 }
+            }
+            if (minIdx != i) {
+                swap(arr, i, minIdx);
             }
         }
         return arr;
@@ -217,7 +221,7 @@ public enum Sorting {
         int gap = arr.length / 2;
         while (gap > 0) {
             shellSort(arr, gap);
-            gap--;
+            gap /= 2;
         }
         return arr;
     }
