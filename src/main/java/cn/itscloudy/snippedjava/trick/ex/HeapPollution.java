@@ -8,7 +8,7 @@ public class HeapPollution {
     }
 
     public <X> X[] polluterCaller(X x) {
-        // the polluter will return Object[] not X[], cause it cannot recognize X
+        // the polluter will return Object[] not X[], because it cannot recognize X
         return polluter(x);
     }
 
