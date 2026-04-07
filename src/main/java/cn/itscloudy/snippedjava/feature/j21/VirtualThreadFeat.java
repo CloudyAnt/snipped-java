@@ -12,7 +12,7 @@ public class VirtualThreadFeat {
     List<String> runAndGetCarrierThreadNames() throws InterruptedException {
         List<String> carrierThreadNames = new ArrayList<>();
         Thread t1 = Thread.ofVirtual().name("vt-1").start(() -> {
-            carrierThreadNames.add(Thread.currentThread().getName());
+            carrierThreadNames.add(getCarrierThreadName());
             try {
                 Thread.sleep(50);
             } catch (InterruptedException e) {
@@ -26,11 +26,17 @@ public class VirtualThreadFeat {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            carrierThreadNames.add(Thread.currentThread().getName());
+            carrierThreadNames.add(getCarrierThreadName());
         });
 
         t1.join();
         t2.join();
         return carrierThreadNames; // Carrier thread names. They are supposed to be the same.
+    }
+
+    private String getCarrierThreadName() {
+        String threadDesc = Thread.currentThread().toString();
+        int atIdx = threadDesc.indexOf('@');
+        return threadDesc.substring(atIdx + 1, threadDesc.length() - 1);
     }
 }
