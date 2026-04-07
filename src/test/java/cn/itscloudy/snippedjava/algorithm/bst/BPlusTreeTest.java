@@ -2,6 +2,8 @@ package cn.itscloudy.snippedjava.algorithm.bst;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.NoSuchElementException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class BPlusTreeTest {
@@ -59,6 +61,44 @@ class BPlusTreeTest {
             assertEquals(is1[i], value.i);
             i++;
         }
+    }
+
+    @Test
+    void shouldSearch3DegreeTree() {
+        BPlusTree tree = new BPlusTree(3);
+
+        tree.insert(100, "100");
+        tree.insert(50, "50");
+        tree.insert(200, "200");
+        tree.insert(150, "150");
+        tree.insert(130, "130");
+        tree.insert(125, "125");
+
+        assertEquals("50", tree.search(50).words);
+        assertEquals("100", tree.search(100).words);
+        assertEquals("125", tree.search(125).words);
+        assertEquals("130", tree.search(130).words);
+        assertEquals("150", tree.search(150).words);
+        assertEquals("200", tree.search(200).words);
+        assertNull(tree.search(20));
+        assertNull(tree.search(500));
+    }
+
+    @Test
+    void shouldIterateEmptyTreeAndThrowAfterEnd() {
+        BPlusTree tree = new BPlusTree(3);
+        assertFalse(tree.iterator().hasNext());
+
+        tree.insert(1, "1");
+        tree.insert(2, "2");
+
+        var iterator = tree.iterator();
+        assertTrue(iterator.hasNext());
+        assertEquals(1, iterator.next().i);
+        assertTrue(iterator.hasNext());
+        assertEquals(2, iterator.next().i);
+        assertFalse(iterator.hasNext());
+        assertThrows(NoSuchElementException.class, iterator::next);
     }
 
     private void assert3DegreeLeafNode(BPlusTree.Node testNode, Integer vk1, Integer vk2) {

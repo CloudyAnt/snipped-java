@@ -2,6 +2,7 @@ package cn.itscloudy.snippedjava.algorithm.bst;
 
 import lombok.AllArgsConstructor;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -61,6 +62,9 @@ public class BPlusTree implements Iterable<BPlusTree.Value> {
 
     @Override
     public Iterator<Value> iterator() {
+        if (top == null) {
+            return Collections.emptyIterator();
+        }
         Node node = top;
         while (!(node instanceof LeafNode)) {
             node = ((IndexNode) node).children[0];
@@ -79,22 +83,30 @@ public class BPlusTree implements Iterable<BPlusTree.Value> {
 
         @Override
         public boolean hasNext() {
-            return i <= maxValueIndex || n.next != null;
+            moveToNextValidValue();
+            return n != null;
         }
 
         @Override
         public Value next() {
-            if (!hasNext()) {
+            moveToNextValidValue();
+            if (n == null) {
                 throw new NoSuchElementException();
             }
-            if (i <= maxValueIndex && n.values[i] != null) {
-                return n.values[i++];
-            }
-            if (n.next != null) {
+            return n.values[i++];
+        }
+
+        private void moveToNextValidValue() {
+            while (n != null) {
+                while (i <= maxValueIndex && n.values[i] == null) {
+                    i++;
+                }
+                if (i <= maxValueIndex) {
+                    return;
+                }
                 n = n.next;
                 i = 0;
             }
-            return n.values[i++];
         }
     }
 
@@ -112,17 +124,12 @@ public class BPlusTree implements Iterable<BPlusTree.Value> {
         protected Overflow insert(Value v) {
             // get child branch
             int i = 0;
-            Node child = children[0];
-            for (; i <= maxChildIndex; i++) {
+            for (; i <= maxKeyIndex; i++) {
                 if (keys[i] == null || v.i < keys[i]) {
-                    child = children[i];
                     break;
                 }
-                if (v.i == keys[i]) {
-                    // skip same value
-                    throw new DuplicateKeyException();
-                }
             }
+            Node child = children[i];
             // insert into child
             Overflow overflow = child.insert(v);
             if (overflow == null) {
@@ -159,13 +166,16 @@ public class BPlusTree implements Iterable<BPlusTree.Value> {
 
         @Override
         protected Value search(int key) {
-            int i = 0;
-            for (; i < keys.length; i++) {
-                if (keys[i] >= key) {
-                    break;
+            for (Node child : children) {
+                if (child == null) {
+                    continue;
+                }
+                Value found = child.search(key);
+                if (found != null) {
+                    return found;
                 }
             }
-            return children[i].search(key);
+            return null;
         }
     }
 
@@ -215,6 +225,9 @@ public class BPlusTree implements Iterable<BPlusTree.Value> {
         @Override
         protected Value search(int key) {
             for (Value value : values) {
+                if (value == null) {
+                    break;
+                }
                 if (value.i == key) {
                     return value;
                 }

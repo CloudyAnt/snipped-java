@@ -61,10 +61,8 @@ public class BTree {
 
             // get child branch
             int i = 0;
-            Node child = children[0];
-            for (; i <= maxChildIndex; i++) {
+            for (; i <= maxValueIndex; i++) {
                 if (values[i] == null || v.i < values[i].i) {
-                    child = children[i];
                     break;
                 }
                 if (v.i == values[i].i) {
@@ -72,6 +70,7 @@ public class BTree {
                     throw new DuplicateKeyException();
                 }
             }
+            Node child = children[i];
             // insert into child
             Overflow overflow = child.insert(v);
             if (overflow == null) {

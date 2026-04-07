@@ -14,30 +14,19 @@ public class AVL extends AbstractBST<AVL.Node> {
 
     @Override
     public void insert(int i, String words) {
-        Node node = new Node(i, words);
-        if (this.top == null) {
-            this.top = node;
-        } else {
-            this.top = insert(node, this.top);
-        }
+        top = insert(new Node(i, words), top);
     }
 
     private Node insert(Node node, Node parent) {
+        if (parent == null) {
+            return node;
+        }
         if (parent.leftMightContain(node)) {
-            if (parent.left == null) {
-                parent.left = node;
-            } else {
-                parent.left = insert(node, parent.left);
-            }
+            parent.left = insert(node, parent.left);
         } else {
-            if (parent.right == null) {
-                parent.right = node;
-            } else {
-                parent.right = insert(node, parent.right);
-            }
+            parent.right = insert(node, parent.right);
         }
 
-        resetHeightOf(parent);
         return balance(parent);
     }
 
@@ -48,6 +37,7 @@ public class AVL extends AbstractBST<AVL.Node> {
     }
 
     private Node balance(Node parent) {
+        resetHeightOf(parent);
         int leftHeight = parent.left == null ? 0 : parent.left.height;
         int rightHeight = parent.right == null ? 0 : parent.right.height;
 

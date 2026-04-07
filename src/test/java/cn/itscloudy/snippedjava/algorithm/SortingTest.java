@@ -28,12 +28,18 @@ class SortingTest {
         }
 
         int[] arr1 = new int[]{-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-        int[] arr2 = new int[]{9, 8, 7, 6, 5, 4, 3, 2, 1, 0, -1, -2};
-        int[] arr3 = new int[]{21, 39, -72, 18, 32, -10, 98, 12, 56, 28, -1, 10};
-
         test(algorithm, arr1, new int[]{-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
+        int[] arr2 = new int[]{9, 8, 7, 6, 5, 4, 3, 2, 1, 0, -1, -2};
         test(algorithm, arr2, new int[]{-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
+        int[] arr3 = new int[]{21, 39, -72, 18, 32, -10, 98, 12, 56, 28, -1, 10};
         test(algorithm, arr3, new int[]{-72, -10, -1, 10, 12, 18, 21, 28, 32, 39, 56, 98});
+        int[] arr4 = new int[]{-100, 1, -50, 10};
+        test(algorithm, arr4, new int[]{-100, -50, 1, 10});
+        int[] arr5 = new int[]{-1000, 999, -1, 0};
+        test(algorithm, arr5, new int[]{-1000, -1, 0, 999});
+        int[] arr6 = new int[]{Integer.MIN_VALUE / 1000, Integer.MAX_VALUE / 1000, 0};
+        test(algorithm, arr6, new int[]{Integer.MIN_VALUE / 1000, 0, Integer.MAX_VALUE / 1000});
+
         test(algorithm, Arrays.copyOf(shuffledLongArray, shuffledLongArray.length), longArray);
     }
 

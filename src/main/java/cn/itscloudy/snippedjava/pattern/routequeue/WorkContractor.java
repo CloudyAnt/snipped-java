@@ -71,8 +71,7 @@ public class WorkContractor {
         private final String namePrefix;
 
         private WorkerThreadFactory() {
-            SecurityManager s = System.getSecurityManager();
-            group = (s != null) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
+            group = Thread.currentThread().getThreadGroup();
             namePrefix = "worker-thread-" + POOL_NUMBER.getAndIncrement();
         }
 

@@ -13,17 +13,22 @@ public abstract class AbstractBST<N extends AbstractBSTNode<N>> {
     public abstract void insert(int i, String words);
 
     protected static <N extends AbstractBSTNode<N>> void insert(N node, N parent) {
-        if (parent.leftMightContain(node)) {
-            if (parent.left == null) {
-                parent.left = node;
+        N current = parent;
+        while (true) {
+            if (current.leftMightContain(node)) {
+                if (current.left == null) {
+                    current.left = node;
+                    break;
+                } else {
+                    current = current.left;
+                }
             } else {
-                insert(node, parent.left);
-            }
-        } else {
-            if (parent.right == null) {
-                parent.right = node;
-            } else {
-                insert(node, parent.right);
+                if (current.right == null) {
+                    current.right = node;
+                    break;
+                } else {
+                    current = current.right;
+                }
             }
         }
     }
@@ -35,16 +40,18 @@ public abstract class AbstractBST<N extends AbstractBSTNode<N>> {
     }
 
     private N search(int i, N parent) {
-        if (parent == null) {
-            return null;
+        N current = parent;
+        while (current != null) {
+            if (i == current.i) {
+                return current;
+            }
+            if (current.leftMightContain(i)) {
+                current = current.left;
+            } else {
+                current = current.right;
+            }
         }
-        if (i == parent.i) {
-            return parent;
-        }
-        if (parent.leftMightContain(i)) {
-            return search(i, parent.left);
-        }
-        return search(i, parent.right);
+        return null;
     }
 
     /**
@@ -89,10 +96,11 @@ public abstract class AbstractBST<N extends AbstractBSTNode<N>> {
 
         public Printer(AbstractBST<N> bst) {
             this.top = bst.top();
-            this.cellStrings = new ArrayList<>();
             cellWidth = cellWidthOf(top);
             height = heightOf(top);
-            width = cellWidth * (int) Math.pow(2, height - 1D);
+            width = height == 0 ? 0 : cellWidth * (1 << (height - 1));
+            int capacity = height == 0 ? 0 : (1 << height) - 1;
+            this.cellStrings = new ArrayList<>(capacity);
         }
 
         private void print() {
@@ -105,8 +113,8 @@ public abstract class AbstractBST<N extends AbstractBSTNode<N>> {
 
             int level = 0;
             while (level < height) {
-                int levelStart = (int) Math.pow(2, level) - 1;
-                int levelEnd = (int) Math.pow(2, level + 1D) - 1;
+                int levelStart = (1 << level) - 1;
+                int levelEnd = (1 << (level + 1)) - 1;
 
                 print(cellStrings.subList(levelStart, levelEnd), width);
                 System.out.println();
@@ -129,6 +137,7 @@ public abstract class AbstractBST<N extends AbstractBSTNode<N>> {
 
         private void setCellString(int index, String string) {
             if (index >= cellStrings.size()) {
+                cellStrings.ensureCapacity(index + 1);
                 for (int i = cellStrings.size(); i <= index; i++) {
                     cellStrings.add(null);
                 }
@@ -138,35 +147,21 @@ public abstract class AbstractBST<N extends AbstractBSTNode<N>> {
 
         private String cellString(String words) {
             int startIndex = (cellWidth - words.length()) / 2;
-            StringBuilder sb = new StringBuilder();
-            int index = 0;
-            while (index < startIndex) {
-                sb.append(' ');
-                index++;
-            }
-            sb.append(words);
-            index += words.length();
-            while (index < cellWidth) {
-                sb.append(' ');
-                index++;
-            }
-            return sb.toString();
+            int leftSpaces = startIndex;
+            int rightSpaces = cellWidth - (startIndex + words.length());
+            return " ".repeat(leftSpaces) + words + " ".repeat(rightSpaces);
         }
 
         private void print(List<String> words, int len) {
             int wordsLen = words.size() * cellWidth;
             int gapSize = (len - wordsLen) / (words.size() + 1);
-
-            int index = 0;
-            while (index < words.size()) {
-                int gi = 0;
-                while (gi < gapSize) {
-                    System.out.print(' ');
-                    gi++;
-                }
-                System.out.print(words.get(index));
-                index++;
+            String gap = " ".repeat(gapSize);
+            StringBuilder sb = new StringBuilder(len);
+            for (String word : words) {
+                sb.append(gap);
+                sb.append(word);
             }
+            System.out.print(sb);
         }
 
         private int heightOf(N n) {
