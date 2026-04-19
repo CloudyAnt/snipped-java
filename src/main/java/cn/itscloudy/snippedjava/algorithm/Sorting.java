@@ -38,14 +38,14 @@ public enum Sorting {
 
     private static int[] selection(int[] arr) {
         for (int i = 0; i < arr.length - 1; i++) {
-            int minIdx = i;
+            int minIndex = i;
             for (int j = i + 1; j < arr.length; j++) {
-                if (arr[j] < arr[minIdx]) {
-                    minIdx = j;
+                if (arr[j] < arr[minIndex]) {
+                    minIndex = j;
                 }
             }
-            if (minIdx != i) {
-                swap(arr, i, minIdx);
+            if (minIndex != i) {
+                swap(arr, i, minIndex);
             }
         }
         return arr;
@@ -53,10 +53,15 @@ public enum Sorting {
 
     private static int[] bubble(int[] arr) {
         for (int i = 1; i < arr.length; i++) {
+            boolean noSwap = true;
             for (int j = 0; j < arr.length - i; j++) {
                 if (arr[j] > arr[j + 1]) {
                     swap(arr, j, j + 1);
+                    noSwap = false;
                 }
+            }
+            if (noSwap) {
+                break;
             }
         }
         return arr;
@@ -64,9 +69,12 @@ public enum Sorting {
 
     private static int[] insertion(int[] arr) {
         for (int i = 1; i < arr.length; i++) {
-            for (int j = i; j > 0 && arr[j] < arr[j - 1]; j--) {
-                swap(arr, j, j - 1);
+            int key = arr[i];
+            int j = i;
+            for (; j > 0 && arr[j - 1] > key; j--) {
+                arr[j] = arr[j - 1];
             }
+            arr[j] = key;
         }
         return arr;
     }
